@@ -6,7 +6,7 @@ import VideoCard from "./VideoCard";
 import { popularVideosAPI } from "../services/videoService";
 
 const Feed = () => {
-  const { loading, searchResults } = useContext(Context);
+  const { changeLoading } = useContext(Context); // Thêm useContext để sử dụng Context
   const [videos, setVideos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -16,7 +16,7 @@ const Feed = () => {
 
   const getData = async () => {
     setIsLoading(true);
-
+    changeLoading(true);
     try {
       const data = await popularVideosAPI();
       if (data && data?.items) {
@@ -28,14 +28,14 @@ const Feed = () => {
       console.log(error);
       setVideos([]);
     }
+    changeLoading(false);
+
     setIsLoading(false);
   };
 
   useEffect(() => {
     document.getElementById("root").classList.remove("custom-h");
   }, []);
-
-  console.log("videos", videos);
 
   return (
     <div className="flex flex-row h-[calc(100%-56px)]">

@@ -7,7 +7,6 @@ import "moment/locale/vi";
 import VideoLength from "../shared/videoLength";
 
 const VideoCard = ({ video }) => {
-  console.log("dataa", video);
   moment.locale("vi");
 
   return (
