@@ -29,7 +29,7 @@ const LeftNav = () => {
       className={`md:block w-[240px] overflow-y-auto h-full py-4 bg-black absolute md:relative z-10 translate-x-[-240px] md:translate-x-0 transition-all ${
         mobileMenu ? "translate-x-0" : ""
       }`}
-      style={{ overflowY: mobileMenu ? "hidden" : "auto" }} // Ẩn thanh cuộn khi mở menu trên màn hình di động
+      style={{ overflowY: "auto" }} // Ẩn thanh cuộn khi mở menu trên màn hình di động
     >
       <div className="flex px-5 flex-col">
         {categories.map((item) => {
@@ -50,10 +50,7 @@ const LeftNav = () => {
             </React.Fragment>
           );
         })}
-        <hr className="my-5 border-white/[0.2]" />
-        <div className="text-white/[0.5] text-[12px]">
-          Clone by: JS Dev Hindi
-        </div>
+        x
       </div>
     </div>
   );

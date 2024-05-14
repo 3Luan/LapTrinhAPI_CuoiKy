@@ -4,7 +4,6 @@ import { abbreviateNumber } from "js-abbreviation-number";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import moment from "moment";
 import "moment/locale/vi";
-import VideoLength from "../shared/videoLength";
 
 const SearchResultVideoCard = ({ video }) => {
   moment.locale("vi");
@@ -17,7 +16,6 @@ const SearchResultVideoCard = ({ video }) => {
             className="h-full w-full object-cover"
             src={video?.snippet?.thumbnails?.high?.url}
           />
-          {video?.lengthSeconds && <VideoLength time={video?.lengthSeconds} />}
         </div>
         <div className="flex flex-col ml-4 md:ml-6 mt-4 md:mt-0 overflow-hidden">
           <span className="text-lg md:text-2xl font-semibold line-clamp-2 text-white">

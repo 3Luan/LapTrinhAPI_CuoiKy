@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import moment from "moment";
 import "moment/locale/vi";
-import VideoLength from "../shared/videoLength";
 
 const VideoCard = ({ video }) => {
   moment.locale("vi");
