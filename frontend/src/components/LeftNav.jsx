@@ -36,11 +36,15 @@ const LeftNav = () => {
           return (
             <React.Fragment key={item.name}>
               <LeftNavMenuItem
-                text={item.type === "home" ? "Home" : item.name}
+                text={item.name}
                 icon={item.icon}
                 action={() => {
                   clickHandler(item.name, item.type);
-                  navigate("/");
+                  if (item.type === "home") {
+                    navigate(`/`);
+                  } else {
+                    navigate(`/${item.type}`);
+                  }
                 }}
                 className={`${
                   selectedCategory === item.name ? "bg-white/[0.15]" : ""

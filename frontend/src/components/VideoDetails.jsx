@@ -23,8 +23,12 @@ const VideoDetails = () => {
 
   useEffect(() => {
     fetchVideoDetails();
-    fetchRelatedVideos();
   }, [id]);
+  useEffect(() => {
+    if (video?.snippet?.title) {
+      fetchRelatedVideos();
+    }
+  }, [video?.snippet?.title]);
 
   useEffect(() => {
     document.getElementById("root").classList.remove("custom-h");
@@ -51,12 +55,31 @@ const VideoDetails = () => {
     setLoadingVideo(false);
   };
 
+  // const fetchRelatedVideos = async () => {
+  //   setLoadingrelatedVideos(true);
+  //   if (id) {
+  //     try {
+  //       const data = await getRelatedVideosAPI(id);
+  //       if (data && data?.errorId === "Success") {
+  //         setRelatedVideos(data?.items);
+  //       } else {
+  //         setRelatedVideos([]);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //       setRelatedVideos([]);
+  //     }
+  //   }
+  //   setLoadingrelatedVideos(false);
+  // };
+
   const fetchRelatedVideos = async () => {
     setLoadingrelatedVideos(true);
-    if (id) {
+    if (video?.snippet?.title) {
       try {
-        const data = await getRelatedVideosAPI(id);
-        if (data && data?.errorId === "Success") {
+        const data = await getRelatedVideosAPI(video?.snippet?.title);
+        console.log(data);
+        if (data && data?.items) {
           setRelatedVideos(data?.items);
         } else {
           setRelatedVideos([]);
@@ -83,7 +106,7 @@ const VideoDetails = () => {
                   url={`https://www.youtube.com/watch?v=${id}`}
                   controls
                   width="100%"
-                  height="100%"
+                  // height="100%"
                   style={{ backgroundColor: "#000000" }}
                   playing={true}
                 />
@@ -145,7 +168,7 @@ const VideoDetails = () => {
           {!isLoadingrelatedVideos && (
             <>
               {relatedVideos?.map((item, index) => {
-                if (item?.type !== "video") return false;
+                // if (item?.type !== "video") return false;
                 return <SuggestionVideoCard key={index} video={item} />;
               })}
             </>

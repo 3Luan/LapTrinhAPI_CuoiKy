@@ -3,6 +3,10 @@ const { checkJWT } = require("../middleware/jwtActions");
 const router = express.Router();
 const playlistController = require("../controllers/playlistController");
 
-router.get("/createPlaylist", checkJWT, playlistController.CreatePlaylist);
+router.get(
+  "/getPlaylistId/:accessToken",
+  checkJWT,
+  playlistController.getPlaylistId
+);
 
 module.exports = router;

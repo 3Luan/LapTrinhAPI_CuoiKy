@@ -23,6 +23,17 @@ export const searchVideosAPI = (keyword) => {
   });
 };
 
+export const getRelatedVideosAPI = (keyword) => {
+  return youtubeApi.get(`search`, {
+    params: {
+      part: "snippet",
+      type: "video",
+      q: keyword,
+      maxResults: 12,
+    },
+  });
+};
+
 export const getVideoVideoDetailsAPI = (videoId) => {
   return youtubeApi.get(`videos`, {
     params: {
@@ -43,17 +54,6 @@ export const getVideoCommentsByIdAPI = (videoId) => {
   });
 };
 
-// export const getVideoRelatedByIdAPI = (videoTitle) => {
-//   return youtubeApi.get(`search`, {
-//     params: {
-//       part: "snippet",
-//       type: "video",
-//       q: videoTitle,
-//       maxResults: 2,
-//     },
-//   });
-// };
-
 export const getPopularMusicVideosAPI = () => {
   return youtubeApi.get(`videos`, {
     params: {
@@ -65,27 +65,28 @@ export const getPopularMusicVideosAPI = () => {
     },
   });
 };
+
 ////////////////////////////////////
 
-export const getRelatedVideosAPI = async (videoId) => {
-  try {
-    const response = await axios.get(
-      "https://youtube-media-downloader.p.rapidapi.com/v2/video/related",
-      {
-        params: {
-          videoId: videoId,
-        },
-        headers: {
-          "X-RapidAPI-Key":
-            "6084b3baf9msh1e664919b0b05a9p1c6450jsn3eaca78b0c53",
-          "X-RapidAPI-Host": "youtube-media-downloader.p.rapidapi.com",
-        },
-      }
-    );
+// export const getRelatedVideosAPI = async (videoId) => {
+//   try {
+//     const response = await axios.get(
+//       "https://youtube-media-downloader.p.rapidapi.com/v2/video/related",
+//       {
+//         params: {
+//           videoId: videoId,
+//         },
+//         headers: {
+//           "X-RapidAPI-Key":
+//             "6084b3baf9msh1e664919b0b05a9p1c6450jsn3eaca78b0c53",
+//           "X-RapidAPI-Host": "youtube-media-downloader.p.rapidapi.com",
+//         },
+//       }
+//     );
 
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching related videos:", error);
-    throw error;
-  }
-};
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error fetching related videos:", error);
+//     throw error;
+//   }
+// };

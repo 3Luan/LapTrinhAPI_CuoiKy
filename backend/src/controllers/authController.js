@@ -5,36 +5,42 @@ const passport = require("passport");
 require("dotenv").config();
 
 const loginWithGoogle = (req, res, next) => {
-  passport.authenticate("google", { scope: ["profile", "email"] })(
-    req,
-    res,
-    next
-  );
+  passport.authenticate("google", {
+    scope: [
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "profile",
+      "email",
+    ],
+  })(req, res, next);
 };
 
 const loginWithGoogleCallback = (req, res, next) => {
-  passport.authenticate("google", async (profile) => {
-    // Logic xử lý sau khi đăng nhập thành công
+  passport.authenticate("google", async (data) => {
     try {
-      if (!profile) {
+      console.log("profile: ", data);
+
+      if (!data.profile) {
         throw {
           code: 1,
           message: "Đăng nhập thất bại. Hãy thử lại",
         };
       }
 
-      let user = await userModel.findById(profile.id);
+      let user = await userModel.findById(data.profile.id);
 
       if (user) {
-        user.name = profile.displayName;
-        user.email = profile.emails;
-        user.avatar = profile.photos[0].value;
+        user.name = data.profile.displayName;
+        user.email = data.profile.emails;
+        user.avatar = data.profile.photos[0].value;
+        user.accessToken = data.accessToken;
+        await user.save(); // Lưu lại thông tin cập nhật
       } else {
         user = await userModel.create({
-          _id: profile.id,
-          name: profile.displayName,
-          email: profile.emails[0].value,
-          avatar: profile.photos[0].value,
+          _id: data.profile.id,
+          name: data.profile.displayName,
+          email: data.profile.emails[0].value,
+          avatar: data.profile.photos[0].value,
+          accessToken: data.accessToken,
         });
       }
 
@@ -47,12 +53,14 @@ const loginWithGoogleCallback = (req, res, next) => {
       // Lưu token vào cookie
       res.cookie("token", token, {
         httpOnly: true,
-        // path: "/api/auth/refresh",
         maxAge: 24 * 60 * 60 * 1000, // 1 ngày
       });
+      console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
 
       res.redirect(`${process.env.URL_FRONTEND}`);
     } catch (error) {
+      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+
       res.redirect("http://localhost:3001/api/auth/google");
     }
   })(req, res, next);
@@ -82,7 +90,7 @@ let refresh = async (req, res) => {
     if (!userId) {
       throw {
         code: 1,
-        message: "Đã có lỗi xảy ra khi refresh1",
+        message: "Không tìm thấy userId",
       };
     }
 
@@ -91,7 +99,7 @@ let refresh = async (req, res) => {
     if (!user) {
       throw {
         code: 1,
-        message: "Đã có lỗi xảy ra khi refresh2",
+        message: "User không tồn tại",
       };
     }
 
@@ -103,7 +111,7 @@ let refresh = async (req, res) => {
   } catch (error) {
     res.status(200).json({
       code: error.code || 1,
-      message: error.message || "Đã có lỗi xảy ra: refresh",
+      message: error.message || "Lỗi: refresh",
     });
   }
 };

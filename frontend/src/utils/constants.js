@@ -5,29 +5,29 @@ import { MdLocalFireDepartment, MdLiveTv } from "react-icons/md";
 import { CgMusicNote } from "react-icons/cg";
 import { FiFilm } from "react-icons/fi";
 import { IoGameControllerSharp } from "react-icons/io5";
-import { ImNewspaper } from "react-icons/im";
-import { GiDiamondTrophy, GiEclipse } from "react-icons/gi";
-import { RiLightbulbLine, RiFeedbackLine } from "react-icons/ri";
+import { RiFeedbackLine } from "react-icons/ri";
 import { FiSettings, FiHelpCircle } from "react-icons/fi";
+import { RiPlayList2Fill } from "react-icons/ri";
+import { MdOutlineReplay } from "react-icons/md";
+import { AiFillLike } from "react-icons/ai";
+import { IoPeople } from "react-icons/io5";
 
 export const categories = [
-    { name: "New", icon: <AiFillHome />, type: "home" },
-    { name: "Trending", icon: <MdLocalFireDepartment />, type: "category" },
-    { name: "Music", icon: <CgMusicNote />, type: "category" },
-    { name: "Films", icon: <FiFilm />, type: "category" },
-    { name: "Live", icon: <MdLiveTv />, type: "category" },
-    { name: "Gaming", icon: <IoGameControllerSharp />, type: "category" },
-    { name: "News", icon: <ImNewspaper />, type: "category" },
-    { name: "Sports", icon: <GiDiamondTrophy />, type: "category" },
-    { name: "Learning", icon: <RiLightbulbLine />, type: "category" },
-    {
-        name: "Fashion & beauty",
-        icon: <GiEclipse />,
-        type: "category",
-        divider: true,
-    },
-    { name: "Settings", icon: <FiSettings />, type: "menu" },
-    { name: "Report History", icon: <AiOutlineFlag />, type: "menu" },
-    { name: "Help", icon: <FiHelpCircle />, type: "menu" },
-    { name: "Send feedback", icon: <RiFeedbackLine />, type: "menu" },
+  { name: "Trang chủ", icon: <AiFillHome />, type: "home" },
+  { name: "Thịnh hành", icon: <MdLocalFireDepartment />, type: "category" },
+  { name: "Âm nhạc", icon: <CgMusicNote />, type: "category", divider: true },
+  { name: "Cộng đồng", icon: <IoPeople />, type: "category" },
+  { name: "Video đã xem", icon: <MdOutlineReplay />, type: "category" },
+  { name: "Danh sách phát", icon: <RiPlayList2Fill />, type: "playlist" },
+  {
+    name: "Video đã thích",
+    icon: <AiFillLike />,
+    type: "category",
+    divider: true,
+  },
+
+  { name: "Cài đặt", icon: <FiSettings />, type: "menu" },
+  { name: "Nhật ký báo cáo", icon: <AiOutlineFlag />, type: "menu" },
+  { name: "Trợ giúp", icon: <FiHelpCircle />, type: "menu" },
+  { name: "Gửi ý kiến phản hồi", icon: <RiFeedbackLine />, type: "menu" },
 ];

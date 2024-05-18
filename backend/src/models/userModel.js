@@ -13,19 +13,20 @@ const userSchema = new mongoose.Schema(
     },
     avatar: { type: String },
     // posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
-    playlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Playlists" }],
-    history: [
-      {
-        videoId: { type: String },
-        addedAt: { type: Date, default: Date.now },
-      },
-    ],
-    saved: [
-      {
-        videoId: { type: String },
-        addedAt: { type: Date, default: Date.now },
-      },
-    ],
+    // playlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Playlists" }],
+    // history: [
+    //   {
+    //     videoId: { type: String },
+    //     addedAt: { type: Date, default: Date.now },
+    //   },
+    // ],
+    // saved: [
+    //   {
+    //     videoId: { type: String },
+    //     addedAt: { type: Date, default: Date.now },
+    //   },
+    // ],
+    accessToken: { type: String, require: true },
   },
   {
     timestamps: true,
