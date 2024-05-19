@@ -4,7 +4,6 @@ const { google } = require("googleapis");
 let getPlaylistId = async (req, res) => {
   try {
     const { accessToken } = req.params;
-    console.log("accessToken", accessToken);
     const userId = req.userId;
 
     const user = await userModel.findById(userId);

@@ -48,7 +48,7 @@ export const getVideoCommentsByIdAPI = (videoId) => {
     params: {
       part: "snippet",
       videoId: videoId,
-      maxResults: 2, // Số lượng bình luận tối đa muốn lấy (có thể thay đổi)
+      maxResults: 12, // Số lượng bình luận tối đa muốn lấy (có thể thay đổi)
       order: "relevance", // Thứ tự sắp xếp bình luận
     },
   });
@@ -61,7 +61,7 @@ export const getPopularMusicVideosAPI = () => {
       chart: "mostPopular",
       regionCode: "VN",
       videoCategoryId: 10,
-      maxResults: 2,
+      maxResults: 12,
     },
   });
 };
