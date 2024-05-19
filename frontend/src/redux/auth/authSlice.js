@@ -8,6 +8,7 @@ export const authSlice = createSlice({
     email: "",
     avatar: "",
     accessToken: "",
+    refreshToken: "",
 
     isLoading: false,
     isError: false,
@@ -27,6 +28,7 @@ export const authSlice = createSlice({
       state.email = "";
       state.avatar = "";
       state.accessToken = "";
+      state.refreshToken = "";
     },
     refreshSuccess: (state, action) => {
       state.isLoading = false;
@@ -38,6 +40,7 @@ export const authSlice = createSlice({
       state.email = action.payload.email;
       state.avatar = action.payload.avatar;
       state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
     },
   },
 });

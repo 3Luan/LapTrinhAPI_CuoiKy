@@ -43,7 +43,7 @@ const LeftNav = () => {
                   if (item.type === "home") {
                     navigate(`/`);
                   } else {
-                    navigate(`/${item.type}`);
+                    navigate(`${item.link}`);
                   }
                 }}
                 className={`${

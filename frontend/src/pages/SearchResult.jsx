@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
-import LeftNav from "./LeftNav";
-import SearchResultVideoCard from "./SearchResultVideoCard";
+import LeftNav from "../components/LeftNav";
+import SearchResultVideoCard from "../components/card/SearchResultVideoCard";
 import { searchVideosAPI } from "../services/videoService";
 import { Context } from "../context/contextApi";
 

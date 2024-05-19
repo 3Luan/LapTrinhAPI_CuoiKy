@@ -1,9 +1,11 @@
 import { Routes, Route } from "react-router-dom";
-import Feed from "../components/Feed";
-import SearchResult from "../components/SearchResult";
-import VideoDetails from "../components/VideoDetails";
+import Home from "../pages/Home";
+import SearchResult from "../pages/SearchResult";
+import VideoDetails from "../pages/VideoDetails";
 import Header from "../components/Header";
 import { useSelector } from "react-redux";
+import Playlist from "../pages/Playlist";
+import PrivateRoutes from "./privateRoutes";
 
 const AppRoutes = () => {
   const auth = useSelector((state) => state.auth);
@@ -22,11 +24,26 @@ const AppRoutes = () => {
       <div className="flex flex-col h-full ">
         <Header />
         <Routes>
-          <Route path="/" exact element={<Feed />} />
+          {/* Home */}
+          <Route path="/" exact element={<Home />} />
+
+          {/* Tìm kiếm */}
           <Route path="/searchResult/:searchQuery" element={<SearchResult />} />
+
+          {/* Trang chi tiết video */}
           <Route path="/video/:id" element={<VideoDetails />} />
 
-          <Route path="*" element={<Feed />} />
+          {/* Danh sách phát */}
+          <Route
+            path="/playlist"
+            element={
+              <PrivateRoutes>
+                <Playlist />
+              </PrivateRoutes>
+            }
+          />
+
+          <Route path="*" element={<Home />} />
         </Routes>
       </div>
     </>

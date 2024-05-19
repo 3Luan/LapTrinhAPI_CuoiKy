@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 
 import { Context } from "../context/contextApi";
-import LeftNav from "./LeftNav";
-import VideoCard from "./VideoCard";
+import LeftNav from "../components/LeftNav";
+import VideoCard from "../components/card/VideoCard";
 import { popularVideosAPI } from "../services/videoService";
 
-const Feed = () => {
+const Home = () => {
   const { changeLoading } = useContext(Context); // Thêm useContext để sử dụng Context
   const [videos, setVideos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -53,4 +53,4 @@ const Feed = () => {
   );
 };
 
-export default Feed;
+export default Home;

@@ -4,7 +4,7 @@ const { google } = require("googleapis");
 let getPlaylistId = async (req, res) => {
   try {
     const { accessToken } = req.params;
-
+    console.log("accessToken", accessToken);
     const userId = req.userId;
 
     const user = await userModel.findById(userId);
@@ -54,7 +54,7 @@ let getPlaylistId = async (req, res) => {
     res.status(200).json({
       code: 0,
       message: "Lấy tất cả ID danh sách phát thành công",
-      playlists,
+      data: playlists,
     });
   } catch (error) {
     console.error(error);

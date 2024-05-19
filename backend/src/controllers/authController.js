@@ -7,7 +7,8 @@ require("dotenv").config();
 const loginWithGoogle = (req, res, next) => {
   passport.authenticate("google", {
     scope: [
-      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/youtube",
+      // "https://www.googleapis.com/auth/drive",
       "profile",
       "email",
     ],
@@ -17,8 +18,6 @@ const loginWithGoogle = (req, res, next) => {
 const loginWithGoogleCallback = (req, res, next) => {
   passport.authenticate("google", async (data) => {
     try {
-      console.log("profile: ", data);
-
       if (!data.profile) {
         throw {
           code: 1,
@@ -26,14 +25,22 @@ const loginWithGoogleCallback = (req, res, next) => {
         };
       }
 
-      let user = await userModel.findById(data.profile.id);
+      let user = await userModel.findOne({ _id: data.profile.id });
 
       if (user) {
-        user.name = data.profile.displayName;
-        user.email = data.profile.emails;
-        user.avatar = data.profile.photos[0].value;
-        user.accessToken = data.accessToken;
-        await user.save(); // Lưu lại thông tin cập nhật
+        user = await userModel.findOneAndUpdate(
+          { _id: data.profile.id },
+          {
+            $set: {
+              name: data.profile.displayName,
+              email: data.profile.emails[0].value,
+              avatar: data.profile.photos[0].value,
+              accessToken: data.accessToken,
+              refreshToken: data.refreshToken,
+            },
+          },
+          { new: true }
+        );
       } else {
         user = await userModel.create({
           _id: data.profile.id,
@@ -41,6 +48,7 @@ const loginWithGoogleCallback = (req, res, next) => {
           email: data.profile.emails[0].value,
           avatar: data.profile.photos[0].value,
           accessToken: data.accessToken,
+          refreshToken: data.refreshToken,
         });
       }
 
@@ -55,12 +63,9 @@ const loginWithGoogleCallback = (req, res, next) => {
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000, // 1 ngày
       });
-      console.log("yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
 
       res.redirect(`${process.env.URL_FRONTEND}`);
     } catch (error) {
-      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-
       res.redirect("http://localhost:3001/api/auth/google");
     }
   })(req, res, next);
