@@ -9,7 +9,7 @@ const PrivateRoutes = (props) => {
     window.open("http://localhost:3001/api/auth/google", "_self");
   };
 
-  if (auth.auth) {
+  if (!auth.auth) {
     return (
       <>
         <div className="flex flex-row h-[calc(100%-56px)]">
