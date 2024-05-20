@@ -16,15 +16,15 @@ const SuggestionVideoCard = ({ video }) => {
           />
         </div>
         <div className="flex flex-col ml-3 overflow-hidden">
-          <span className="text-sm lg:text-xs xl:text-sm font-bold line-clamp-2 text-white">
+          <span className="text-sm lg:text-xs xl:text-sm font-bold line-clamp-2 text-black">
             {video?.snippet?.title}
           </span>
-          <span className="text-[12px] lg:text-[10px] xl:text-[12px] font-semibold mt-2 text-white/[0.7] flex items-center">
+          <span className="text-[12px] lg:text-[10px] xl:text-[12px] font-semibold mt-2 text-black/[0.7] flex items-center">
             {video.snippet.channelTitle}
           </span>
-          <div className="flex text-[12px] lg:text-[10px] xl:text-[12px] font-semibold text-white/[0.7] truncate overflow-hidden">
+          <div className="flex text-[12px] lg:text-[10px] xl:text-[12px] font-semibold text-black/[0.7] truncate overflow-hidden">
             <span>110</span>
-            <span className="flex text-[24px] leading-none font-bold text-white/[0.7] relative top-[-10px] mx-1">
+            <span className="flex text-[24px] leading-none font-bold text-black/[0.7] relative top-[-10px] mx-1">
               .
             </span>
             <span className="truncate">

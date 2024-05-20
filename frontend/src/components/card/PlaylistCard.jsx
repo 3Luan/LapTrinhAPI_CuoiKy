@@ -16,16 +16,16 @@ const PlaylistCard = ({ data }) => {
             src={data?.snippet?.thumbnails?.high?.url}
           />
         </div>
-        <div className="flex text-white mt-2">
+        <div className="flex text-black mt-2">
           <div className="flex flex-col overflow-hidden">
             <span className="text-sm font-bold line-clamp-2">
               {data?.snippet?.title}
             </span>
-            <span className="text-[12px] font-semibold mt-1 text-white/[0.7] flex items-center">
+            <span className="text-[12px] font-semibold mt-1 text-black/[0.7] flex items-center">
               {data?.snippet?.channelTitle} • Danh sách phát •{" "}
               {data?.contentDetails?.itemCount} video
             </span>
-            <div className="flex text-[12px] font-semibold text-white/[0.7] truncate overflow-hidden">
+            <div className="flex text-[12px] font-semibold text-black/[0.7] truncate overflow-hidden">
               <span className="truncate">
                 Cập nhật: {moment(data.snippet.publishedAt).fromNow()}
               </span>

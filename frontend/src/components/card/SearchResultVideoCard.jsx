@@ -18,10 +18,10 @@ const SearchResultVideoCard = ({ video }) => {
           />
         </div>
         <div className="flex flex-col ml-4 md:ml-6 mt-4 md:mt-0 overflow-hidden">
-          <span className="text-lg md:text-2xl font-semibold line-clamp-2 text-white">
+          <span className="text-lg md:text-2xl font-semibold line-clamp-2 text-black">
             {video?.snippet?.title}
           </span>
-          <span className="empty:hidden text-sm line-clamp-1 md:line-clamp-2 text-white/[0.7] md:pr-24 md:my-4">
+          <span className="empty:hidden text-sm line-clamp-1 md:line-clamp-2 text-black/[0.7] md:pr-24 md:my-4">
             {video?.descriptionSnippet}
           </span>
           <div className="hidden md:flex items-center">
@@ -34,15 +34,15 @@ const SearchResultVideoCard = ({ video }) => {
               </div>
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-semibold mt-2 text-white/[0.7] flex items-center">
+              <span className="text-sm font-semibold mt-2 text-black/[0.7] flex items-center">
                 {video.snippet.channelTitle}
                 {/* {video?.author?.badges[0]?.type === "VERIFIED_CHANNEL" && (
                   <BsFillCheckCircleFill className="text-white/[0.5] text-[12px] lg:text-[10px] xl:text-[12px] ml-1" />
                 )} */}
               </span>
-              <div className="flex text-sm font-semibold text-white/[0.7] truncate overflow-hidden">
+              <div className="flex text-sm font-semibold text-black/[0.7] truncate overflow-hidden">
                 <span>110 views</span>
-                <span className="flex text-[24px] leading-none font-bold text-white/[0.7] relative top-[-10px] mx-1">
+                <span className="flex text-[24px] leading-none font-bold text-black/[0.7] relative top-[-10px] mx-1">
                   .
                 </span>
                 <span className="truncate">

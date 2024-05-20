@@ -41,8 +41,8 @@ const Playlist = () => {
   return (
     <div className="flex flex-row h-[calc(100%-56px)]">
       <LeftNav />
-      <div className="grow w-[calc(100%-240px)] h-full overflow-y-auto bg-black custom-scrollbar">
-        <div className="text-white px-5 py-3 font-bold text-2xl">
+      <div className="grow w-[calc(100%-240px)] h-full overflow-y-auto bg-pink-50 custom-scrollbar">
+        <div className="text-black px-5 py-3 font-bold text-2xl">
           Danh sách phát
         </div>
 
