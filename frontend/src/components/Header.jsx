@@ -125,7 +125,7 @@ const Header = () => {
                 className="bg-white px-5 py-5 rounded-md mt-4"
               >
                 <Popup.Content>
-                  <Link to={`/profile/${auth.id}`} className="">
+                  <Link to={`/profile`} className="">
                     Trang cá nhân
                   </Link>
 

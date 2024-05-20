@@ -9,6 +9,7 @@ import PrivateRoutes from "./privateRoutes";
 import LikedVideo from "../pages/LikedVideo";
 import Trending from "../pages/Trending";
 import Community from "../pages/Community";
+import Profile from "../pages/Profile";
 
 const AppRoutes = () => {
   const auth = useSelector((state) => state.auth);
@@ -65,6 +66,16 @@ const AppRoutes = () => {
             element={
               <PrivateRoutes>
                 <Community />
+              </PrivateRoutes>
+            }
+          />
+
+          {/* Trang cá nhân */}
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoutes>
+                <Profile />
               </PrivateRoutes>
             }
           />

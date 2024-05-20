@@ -3,6 +3,7 @@ const userModel = require("../models/UserModel");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 require("dotenv").config();
+const { google } = require("googleapis");
 
 const loginWithGoogle = (req, res, next) => {
   passport.authenticate("google", {
@@ -18,23 +19,49 @@ const loginWithGoogle = (req, res, next) => {
 const loginWithGoogleCallback = (req, res, next) => {
   passport.authenticate("google", async (data) => {
     try {
-      if (!data.profile) {
+      if (!data.accessToken || !data.profile) {
         throw {
           code: 1,
           message: "Đăng nhập thất bại. Hãy thử lại",
         };
       }
 
-      let user = await userModel.findOne({ _id: data.profile.id });
+      const oauth2Client = new google.auth.OAuth2();
+      oauth2Client.setCredentials({ access_token: data.accessToken });
 
-      if (user) {
-        user = await userModel.findOneAndUpdate(
-          { _id: data.profile.id },
+      const youtube = google.youtube({ version: "v3", auth: oauth2Client });
+      const response = await youtube.channels.list({
+        part: "snippet,statistics,brandingSettings",
+        mine: true,
+      });
+
+      if (!response.data.items.length) {
+        throw {
+          code: 1,
+          message: "Không tìm thấy kênh YouTube của người dùng",
+        };
+      }
+
+      const youtubeProfile = response.data.items[0];
+      console.log("youtubeProfile", response.data.items[0].brandingSettings);
+      let userData = await userModel.findOne({ _id: youtubeProfile.id });
+
+      if (userData) {
+        userData = await userModel.findOneAndUpdate(
+          { _id: youtubeProfile.id },
           {
             $set: {
-              name: data.profile.displayName,
+              name: youtubeProfile.snippet.title,
+              description: youtubeProfile.snippet.description,
+              customUrl: youtubeProfile.snippet.customUrl,
+              publishedAt: youtubeProfile.snippet.publishedAt,
+              country: youtubeProfile.snippet.country,
               email: data.profile.emails[0].value,
-              avatar: data.profile.photos[0].value,
+              avatar: youtubeProfile.snippet.thumbnails.high.url,
+              coverAvatar:
+                youtubeProfile?.brandingSettings?.image?.bannerExternalUrl ||
+                "",
+              subscriberCount: youtubeProfile.statistics.subscriberCount,
               accessToken: data.accessToken,
               refreshToken: data.refreshToken,
             },
@@ -42,18 +69,25 @@ const loginWithGoogleCallback = (req, res, next) => {
           { new: true }
         );
       } else {
-        user = await userModel.create({
-          _id: data.profile.id,
-          name: data.profile.displayName,
+        userData = await userModel.create({
+          _id: youtubeProfile.id,
+          name: youtubeProfile.snippet.title,
+          description: youtubeProfile.snippet.description,
+          customUrl: youtubeProfile.snippet.customUrl,
+          publishedAt: youtubeProfile.snippet.publishedAt,
+          country: youtubeProfile.snippet.country,
           email: data.profile.emails[0].value,
-          avatar: data.profile.photos[0].value,
+          avatar: youtubeProfile.snippet.thumbnails.high.url,
+          coverAvatar:
+            youtubeProfile?.brandingSettings?.image?.bannerExternalUrl || "",
+          subscriberCount: youtubeProfile.statistics.subscriberCount,
           accessToken: data.accessToken,
           refreshToken: data.refreshToken,
         });
       }
 
       let payload = {
-        id: user._id,
+        id: userData._id,
       };
 
       const token = jwtActions.createJWT(payload);
@@ -66,6 +100,7 @@ const loginWithGoogleCallback = (req, res, next) => {
 
       res.redirect(`${process.env.URL_FRONTEND}`);
     } catch (error) {
+      console.log(error);
       res.redirect("http://localhost:3001/api/auth/google");
     }
   })(req, res, next);

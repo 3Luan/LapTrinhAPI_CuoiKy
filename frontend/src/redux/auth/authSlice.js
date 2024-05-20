@@ -5,8 +5,14 @@ export const authSlice = createSlice({
   initialState: {
     id: "",
     name: "",
+    description: "",
+    customUrl: "",
+    publishedAt: "",
+    country: "",
     email: "",
     avatar: "",
+    coverAvatar: "",
+    subscriberCount: "",
     accessToken: "",
     refreshToken: "",
 
@@ -25,8 +31,14 @@ export const authSlice = createSlice({
 
       state.id = "";
       state.name = "";
+      state.description = "";
+      state.customUrl = "";
+      state.publishedAt = "";
+      state.country = "";
       state.email = "";
       state.avatar = "";
+      state.coverAvatar = "";
+      state.subscriberCount = "";
       state.accessToken = "";
       state.refreshToken = "";
     },
@@ -37,8 +49,14 @@ export const authSlice = createSlice({
 
       state.id = action.payload._id;
       state.name = action.payload.name;
+      state.description = action.payload.description;
+      state.customUrl = action.payload.customUrl;
+      state.publishedAt = action.payload.publishedAt;
+      state.country = action.payload.country;
       state.email = action.payload.email;
       state.avatar = action.payload.avatar;
+      state.coverAvatar = action.payload.coverAvatar;
+      state.subscriberCount = action.payload.subscriberCount;
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
     },

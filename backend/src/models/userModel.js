@@ -6,28 +6,36 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
     name: { type: String, require: true },
+    description: { type: String, require: true },
+    customUrl: { type: String, require: true },
+    publishedAt: { type: String, require: true },
+    country: { type: String, require: true },
     email: {
       type: String,
       require: true,
       unique: true,
     },
-    avatar: { type: String },
+    avatar: {
+      type: String,
+      require: true,
+    },
+    coverAvatar: {
+      type: String,
+      default:
+        "https://yt3.googleusercontent.com/KbPMUbosgKFr-A5ihp_5n39G-XJnOY3Un6CnAxfqLpWh6Lh0pm_1SXc-uwCAk2DgO1-PG8lO",
+    },
+    subscriberCount: {
+      type: String,
+    },
+    accessToken: { type: String, require: true },
+    refreshToken: { type: String, require: true },
     // posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
-    // playlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Playlists" }],
     // history: [
     //   {
     //     videoId: { type: String },
     //     addedAt: { type: Date, default: Date.now },
     //   },
     // ],
-    // saved: [
-    //   {
-    //     videoId: { type: String },
-    //     addedAt: { type: Date, default: Date.now },
-    //   },
-    // ],
-    accessToken: { type: String, require: true },
-    refreshToken: { type: String, require: true },
   },
   {
     timestamps: true,
