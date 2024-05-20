@@ -4,25 +4,37 @@ import ReactPlayer from "react-player/youtube";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import { AiOutlineLike } from "react-icons/ai";
 import { abbreviateNumber } from "js-abbreviation-number";
-import SuggestionVideoCard from "../components/card/SuggestionVideoCard";
+
+import SuggestionVideoCard from "../components/card/VideoPlaylistCard";
 import {
   getRelatedVideosAPI,
   getVideoVideoDetailsAPI,
 } from "../services/videoService";
-import LeftNav from "../components/LeftNav";
 import { Context } from "../context/contextApi";
+import {
+  getPlaylistIdAPI,
+  getPlaylistVideosAPI,
+} from "../services/playlistService";
+import VideoPlaylistCard from "../components/card/VideoPlaylistCard";
 
-const VideoDetails = () => {
+const VideoPlaylistDetails = () => {
   const [video, setVideo] = useState([]);
+  const [videoInPlaylist, setVideoInPlaylist] = useState([]);
   const [relatedVideos, setRelatedVideos] = useState([]);
-  const { id } = useParams();
+  const { playlistId, videoId } = useParams();
   const [isLoadingVideo, setLoadingVideo] = useState(false);
-  const [isLoadingrelatedVideos, setLoadingrelatedVideos] = useState(false);
-  const { changeLoading } = useContext(Context); // Thêm useContext để sử dụng Context
+  const [isLoadingRelatedVideos, setLoadingRelatedVideos] = useState(false);
+  const [isLoadingPlaylistVideos, setLoadingPlaylistVideos] = useState(false);
+  const { changeLoading } = useContext(Context);
 
   useEffect(() => {
     fetchVideoDetails();
-  }, [id]);
+  }, [videoId]);
+
+  useEffect(() => {
+    fetchPlaylistVideos();
+  }, [playlistId]);
+
   useEffect(() => {
     if (video?.snippet?.title) {
       fetchRelatedVideos();
@@ -37,9 +49,9 @@ const VideoDetails = () => {
     setLoadingVideo(true);
     changeLoading(true);
 
-    if (id) {
+    if (videoId) {
       try {
-        const data = await getVideoVideoDetailsAPI(id);
+        const data = await getVideoVideoDetailsAPI(videoId);
         if (data && data?.items[0]) {
           setVideo(data?.items[0]);
         } else {
@@ -54,26 +66,8 @@ const VideoDetails = () => {
     setLoadingVideo(false);
   };
 
-  // const fetchRelatedVideos = async () => {
-  //   setLoadingrelatedVideos(true);
-  //   if (id) {
-  //     try {
-  //       const data = await getRelatedVideosAPI(id);
-  //       if (data && data?.errorId === "Success") {
-  //         setRelatedVideos(data?.items);
-  //       } else {
-  //         setRelatedVideos([]);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //       setRelatedVideos([]);
-  //     }
-  //   }
-  //   setLoadingrelatedVideos(false);
-  // };
-
   const fetchRelatedVideos = async () => {
-    setLoadingrelatedVideos(true);
+    setLoadingRelatedVideos(true);
     if (video?.snippet?.title) {
       try {
         const data = await getRelatedVideosAPI(video?.snippet?.title);
@@ -87,24 +81,38 @@ const VideoDetails = () => {
         setRelatedVideos([]);
       }
     }
-    setLoadingrelatedVideos(false);
+    setLoadingRelatedVideos(false);
   };
+
+  const fetchPlaylistVideos = async () => {
+    setLoadingPlaylistVideos(true);
+    try {
+      const data = await getPlaylistVideosAPI(playlistId);
+      if (data?.code === 0) {
+        setVideoInPlaylist(data?.data);
+      } else {
+        setVideoInPlaylist([]);
+      }
+    } catch (error) {
+      console.log(error);
+      setVideoInPlaylist([]);
+    }
+    setLoadingPlaylistVideos(false);
+  };
+
+  console.log("relatedVideos", videoInPlaylist);
 
   return (
     <div className="flex justify-center flex-row h-[calc(100%-56px)] bg-pink-50">
-      {/* <div className="flex flex-row h-[calc(100%-56px)] bg-black"> */}
-      {/* <LeftNav /> */}
-
       <div className="w-full max-w-[1280px] flex flex-col lg:flex-row">
         <div className="flex flex-col lg:w-[calc(100%-350px)] xl:w-[calc(100%-400px)] px-4 py-3 lg:py-6 overflow-y-auto">
           {!isLoadingVideo && (
             <>
               <div className="h-[200px] md:h-[400px] lg:h-[400px] xl:h-[550px] ml-[-16px] lg:ml-0 mr-[-16px] lg:mr-0">
                 <ReactPlayer
-                  url={`https://www.youtube.com/watch?v=${id}`}
+                  url={`https://www.youtube.com/watch?v=${videoId}`}
                   controls
                   width="100%"
-                  // height="100%"
                   style={{ backgroundColor: "#000000" }}
                   playing={true}
                 />
@@ -162,19 +170,41 @@ const VideoDetails = () => {
             </>
           )}
         </div>
-        <div className="flex flex-col py-6 px-4 overflow-y-auto lg:w-[350px] xl:w-[400px] custom-scrollbar">
-          {!isLoadingrelatedVideos && (
-            <>
-              {relatedVideos?.map((item, index) => {
-                // if (item?.type !== "video") return false;
-                return <SuggestionVideoCard key={index} video={item} />;
-              })}
-            </>
-          )}
+        <div className="pt-6 px-4 overflow-y-auto lg:w-[350px] xl:w-[400px] custom-scrollbar">
+          <div className="">
+            <h3 className="text-lg font-bold pb-2 bg-black  rounded-t-lg pt-2 text-center text-white">
+              Danh sách phát
+            </h3>
+
+            <div className=" max-h-80 overflow-y-auto border-gray-500 border p-2 rounded-b-lg">
+              {!isLoadingPlaylistVideos && videoInPlaylist.length > 0 && (
+                <div>
+                  {videoInPlaylist.map((item, index) => (
+                    <VideoPlaylistCard
+                      key={index}
+                      video={item}
+                      playlistId={playlistId}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <h3 className="text-lg font-bold mb-4">Video liên quan</h3>
+            {!isLoadingRelatedVideos && relatedVideos.length > 0 && (
+              <div>
+                {relatedVideos.map((item, index) => (
+                  <SuggestionVideoCard key={index} video={item} />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default VideoDetails;
+export default VideoPlaylistDetails;

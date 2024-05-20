@@ -20,7 +20,7 @@ const Playlist = () => {
     setIsLoading(true);
     changeLoading(true);
     try {
-      const data = await getPlaylistIdAPI(auth?.accessToken);
+      const data = await getPlaylistIdAPI();
       if (data?.code === 0) {
         setData(data?.data);
       } else {
@@ -38,7 +38,7 @@ const Playlist = () => {
   useEffect(() => {
     document.getElementById("root").classList.remove("custom-h");
   }, []);
-  
+
   return (
     // <div className="flex flex-row h-[calc(100%-56px)]">
     //   <LeftNav />
@@ -56,7 +56,6 @@ const Playlist = () => {
     //   </div>
     // </div>
 
-
     // <div className="flex flex-row h-[calc(100%-56px)]">
     //   <LeftNav/>
     //   <div className="grow w-[calc(100%-240px)] h-full overflow-y-auto bg-pink-50 custom-scrollbar">
@@ -68,26 +67,26 @@ const Playlist = () => {
     //       {!isLoading && data.map((item) => {
     //         return <PlaylistCard key={item?.id} data={item}/>;
     //       })}
-          
+
     //     </div>
     //   </div>
     // </div>
 
-
     <div className="flex flex-row h-[calc(100%-56px)] ">
-    <LeftNav />
-    <div className="grow w-[calc(100%-240px)] h-full overflow-y-auto bg-pink-50 custom-scrollbar">
-      <div className="text-black px-5 py-3 font-bold text-4xl flex items-center justify-center">
-       <span className="ml-2">Danh sách phát</span> 
-      </div>
-     
-      <div className="grid grid-cols-1 gap-2 p-5">
-      {!isLoading && data.map((item) => {
-           return <PlaylistCard key={item?.id} data={item}/>;
-          })}
+      <LeftNav />
+      <div className="grow w-[calc(100%-240px)] h-full overflow-y-auto bg-pink-50 custom-scrollbar">
+        <div className="text-black px-5 py-3 font-bold text-4xl flex items-center justify-center">
+          <span className="ml-2">Danh sách phát</span>
+        </div>
+
+        <div className="grid grid-cols-1 gap-2 p-5">
+          {!isLoading &&
+            data.map((item) => {
+              return <PlaylistCard key={item?.id} data={item} />;
+            })}
+        </div>
       </div>
     </div>
-  </div>
   );
 };
 

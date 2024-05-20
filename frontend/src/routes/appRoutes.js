@@ -10,6 +10,7 @@ import LikedVideo from "../pages/LikedVideo";
 import Trending from "../pages/Trending";
 import Community from "../pages/Community";
 import Profile from "../pages/Profile";
+import VideoPlaylistDetails from "../pages/VideoPlaylistDetails";
 
 const AppRoutes = () => {
   const auth = useSelector((state) => state.auth);
@@ -36,6 +37,12 @@ const AppRoutes = () => {
 
           {/* Trang chi tiết video */}
           <Route path="/video/:id" element={<VideoDetails />} />
+
+          {/* Trang chi tiết video của danh sách phát */}
+          <Route
+            path="/playlist/:playlistId/video/:videoId"
+            element={<VideoPlaylistDetails />}
+          />
 
           {/* Video thịnh hành */}
           <Route path="/trending" element={<Trending />} />

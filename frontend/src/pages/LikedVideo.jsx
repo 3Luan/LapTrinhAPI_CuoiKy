@@ -25,7 +25,6 @@ const LikedVideo = () => {
 
     try {
       const data = await getLikedVideosAPI();
-      console.log(data);
       if (data?.code === 0) {
         setData(data?.data);
       } else {

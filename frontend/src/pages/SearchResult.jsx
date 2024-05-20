@@ -23,7 +23,6 @@ const SearchResult = () => {
     if (searchQuery) {
       try {
         const data = await searchVideosAPI(searchQuery);
-        console.log(data);
         if (data && data?.items) {
           setVideo(data?.items);
         } else {

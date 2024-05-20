@@ -5,7 +5,7 @@ import { BsFillCheckCircleFill } from "react-icons/bs";
 import moment from "moment";
 import "moment/locale/vi";
 
-const PlaylistCard = ({ data }) => {
+const PlaylistCard = ({ playlistId, data }) => {
   moment.locale("vi");
   return (
     // <Link to={""}>
@@ -34,15 +34,15 @@ const PlaylistCard = ({ data }) => {
     //     </div>
     //   </div>
     // </Link>
-    <Link to={``}>
-    <div className="flex flex-col md:flex-row mb-8 md:mb-3 lg:hover:bg-white/[0.1] rounded-xl md:p-4">
-      <div className="relative flex shrink-0 h-48 md:h-28 lg:h-40 xl:h-48 w-full md:w-48 lg:w-64 xl:w-80 rounded-xl bg-slate-800 overflow-hidden">
-        <img
-          className="h-full w-full object-cover"
-          src={data?.snippet?.thumbnails?.high?.url}
-        />
-      </div>
-      <div className="flex text-black mt-2">
+    <Link to={`/playlist/${data?.id}/video/${data?.firstVideoId}`}>
+      <div className="flex flex-col md:flex-row mb-8 md:mb-3 lg:hover:bg-white/[0.1] rounded-xl md:p-4">
+        <div className="relative flex shrink-0 h-48 md:h-28 lg:h-40 xl:h-48 w-full md:w-48 lg:w-64 xl:w-80 rounded-xl bg-slate-800 overflow-hidden">
+          <img
+            className="h-full w-full object-cover"
+            src={data?.snippet?.thumbnails?.high?.url}
+          />
+        </div>
+        <div className="flex text-black mt-2">
           <div className="flex flex-col overflow-hidden">
             <span className="text-sm font-bold line-clamp-2">
               {data?.snippet?.title}
@@ -59,7 +59,7 @@ const PlaylistCard = ({ data }) => {
           </div>
         </div>
       </div>
-  </Link>
+    </Link>
   );
 };
 
