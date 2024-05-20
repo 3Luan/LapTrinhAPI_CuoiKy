@@ -48,8 +48,8 @@ const Community = () => {
   return (
     <div className="flex flex-row h-[calc(100%-56px)] ">
       <LeftNav />
-      <div className="grow w-[calc(100%-240px)] h-full overflow-y-auto bg-black custom-scrollbar">
-        <div className="text-white px-5 py-3 font-bold text-2xl text-center">
+      <div className="grow w-[calc(100%-240px)] h-full overflow-y-auto bg-pink-50 custom-scrollbar">
+        <div className="text-black px-5 py-3 font-bold text-2xl text-center">
           Cộng đồng
         </div>
         <div className="grid grid-cols-1 gap-2 p-5">

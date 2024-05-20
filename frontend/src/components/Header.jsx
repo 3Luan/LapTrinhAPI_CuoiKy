@@ -15,6 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { handleRefresh } from "../redux/auth/authAction";
 import { logoutAPI } from "../services/authService";
 import { getPlaylistIdAPI } from "../services/playlistService";
+import profileUser from "../images/profile-user.png"
+import logOut from "../images/logout.png"
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -57,7 +59,7 @@ const Header = () => {
   };
 
   return (
-    <div className="sticky top-0 z-10 flex flex-row items-center justify-between h-14 px-4 md:px-5 bg-pink-50 dark:bg-black">
+    <div className="sticky top-0 z-10 flex flex-row items-center justify-between h-14 px-4 md:px-5 bg-pink-50">
       {loading && <Loader />}
 
       <div className="flex h-5 items-center">
@@ -123,21 +125,31 @@ const Header = () => {
                 onOpen={() => setShowPopup(true)}
                 onClose={() => setShowPopup(false)}
                 position="bottom right"
-                className="bg-pink-50 px-5 py-5 rounded-md mt-4"
+                className="bg-pink-50 px-7 py-7 rounded-md mt-4"
               >
                 <Popup.Content>
-                  <Link to={`/profile`} className="">
-                    Trang cá nhân
+                  
+                  <Link to={`/profile`} className="flex items-center">
+                    <img
+                    className="h-5 w-5"
+                    src = {profileUser}
+                    alt = "profileuser"
+                    />
+                     <span className="ml-2">Trang cá nhân </span>
                   </Link>
 
-                  <hr />
                   <button
                     onClick={() => {
                       if (!isLoading) handleLogout();
                     }}
-                    className=""
+                    className="flex items-center pt-3"
                   >
-                    Đăng xuất
+                    <img
+                    className="h-5 w-5"
+                    src = {logOut}
+                    alt = "logout"
+                    />
+                    <span className="ml-2">Đăng xuất </span>
                   </button>
                 </Popup.Content>
               </Popup>

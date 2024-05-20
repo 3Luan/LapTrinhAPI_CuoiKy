@@ -3,6 +3,7 @@ import LeftNav from "../components/LeftNav";
 import { getPopularMusicVideosAPI } from "../services/videoService";
 import { Context } from "../context/contextApi";
 import TrendingVideoCard from "../components/card/TrendingVideoCard";
+import trending from "../images/trending.png";
 
 const Trending = () => {
   const [data, setData] = useState([]);
@@ -43,11 +44,15 @@ const Trending = () => {
   return (
     <div className="flex flex-row h-[calc(100%-56px)] ">
       <LeftNav />
-      <div className="grow w-[calc(100%-240px)] h-full overflow-y-auto bg-black custom-scrollbar">
-        <div className="text-white px-5 py-3 font-bold text-2xl">
-          Thịnh hành
+      <div className="grow w-[calc(100%-240px)] h-full overflow-y-auto bg-pink-50 custom-scrollbar">
+        <div className="text-black px-5 py-3 font-bold text-4xl flex items-center justify-center">
+          <img className="h-14 w-14"
+          src={trending}
+          alt="Trending"
+          />
+         <span className="ml-2">Thịnh hành</span> 
         </div>
-        <div className="px-5 text-white flex space-x-5">
+        <div className="px-5 text-black flex space-x-5 font-medium">
           <button>Mới nhất</button>
           <button>Âm nhạc</button>
           <button>Trò chơi</button>

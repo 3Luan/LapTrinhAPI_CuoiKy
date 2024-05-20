@@ -11,8 +11,8 @@ const PostCard = ({ data }) => {
   return (
     <>
       {/* <div className="flex flex-col md:flex-row mb-8 md:mb-3 lg:bg-gray-500 rounded-xl md:p-4"> */}
-      <div class="flex bg-gray-300 shadow-lg rounded-lg md:mx-auto max-w-md md:max-w-2xl ">
-        <div class="bg-gray-300 text-black rounded-lg  w-[34rem] space-y-6 p-4">
+      <div class="flex bg-gray-50 shadow-lg rounded-lg md:mx-auto max-w-md md:max-w-2xl ">
+        <div class="bg-gray-50 text-black rounded-lg  w-[34rem] space-y-6 p-4">
           <div class="flex space-x-4 items-center ">
             <div class="w-12 h-12">
               <img

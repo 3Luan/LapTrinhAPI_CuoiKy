@@ -54,7 +54,6 @@ const LeftNav = () => {
             </React.Fragment>
           );
         })}
-        x
       </div>
     </div>
   );
