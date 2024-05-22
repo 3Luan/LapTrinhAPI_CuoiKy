@@ -18,7 +18,7 @@ const LikedVideoCard = ({ data }) => {
           />
         </div>
         <div className="flex flex-col ml-4 md:ml-6 mt-4 md:mt-0 overflow-hidden">
-          <span className="text-lg md:text-2xl font-semibold line-clamp-2 text-black">
+          <span className="text-lg md:text-xl font-semibold line-clamp-2 text-black">
             {data?.snippet?.title}
           </span>
           <span className="empty:hidden text-sm line-clamp-1 md:line-clamp-2 text-black/[0.7] md:pr-24 md:my-4">

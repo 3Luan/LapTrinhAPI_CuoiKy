@@ -75,6 +75,28 @@ export const getVideoByIdAPI = (videoId) => {
   });
 };
 
+export const getPopularGameVideosAPI = () => {
+  return youtubeApi.get(`videos`,{
+    params:{
+      part: "snippet",
+      chart: "mostPopular",
+      regionCode:"VN",
+      videoCategoryId: 20,
+      maxResults: 12,
+    },
+  });
+};
+export const getPopularSportVideosAPI = () => {
+  return youtubeApi.get(`videos`,{
+    params:{
+      part: "snippet",
+      chart: "mostPopular",
+      regionCode:"VN",
+      videoCategoryId: 17,
+      maxResults: 12,
+    },
+  });
+};
 // // Lấy video trong danh sách phát
 // export const getPlaylistVideosAPI = (playlistId) => {
 //   return youtubeApi.get("playlistItems", {

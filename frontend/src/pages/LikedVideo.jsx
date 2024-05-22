@@ -47,7 +47,7 @@ const LikedVideo = () => {
     <div className="flex flex-row h-[calc(100%-56px)] ">
       <LeftNav />
       <div className="grow w-[calc(100%-240px)] h-full overflow-y-auto bg-pink-50 custom-scrollbar">
-        <div className="text-black px-5 py-3 font-bold text-2xl">
+        <div className="text-black px-5 py-3 font-bold text-4xl flex justify-center items-center">
           Video đã thích
         </div>
         <div className="grid grid-cols-1 gap-2 p-5">
