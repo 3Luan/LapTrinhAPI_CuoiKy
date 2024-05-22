@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { v4: uuidv4 } = require("uuid");
 
 const postsSchema = new mongoose.Schema(
   {
@@ -12,22 +13,17 @@ const postsSchema = new mongoose.Schema(
     },
     images: [
       {
-        data: Buffer,
-        contentType: String,
-        size: Number,
-      },
-    ],
-    files: [
-      {
-        data: Buffer, // Dữ liệu file dưới dạng Buffer
-        contentType: String, // Loại nội dung của file
-        originalName: String, // Tên gốc của file
-        size: Number, // Kích thước của file trong byte
+        _id: {
+          type: String,
+          default: uuidv4,
+        },
+        name: String, // Tên của hình ảnh
+        path: String, // Đường dẫn của hình ảnh
       },
     ],
     likes: [
       {
-        user: { type: String },
+        _id: { type: String },
       },
     ],
     comments: [
@@ -36,6 +32,14 @@ const postsSchema = new mongoose.Schema(
         ref: "Comments",
       },
     ],
+    isDisplay: {
+      type: Boolean,
+      default: true,
+    },
+    isDelete: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

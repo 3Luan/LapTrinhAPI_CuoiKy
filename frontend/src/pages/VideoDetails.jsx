@@ -11,10 +11,12 @@ import {
 } from "../services/videoService";
 import LeftNav from "../components/LeftNav";
 import { Context } from "../context/contextApi";
+import { addHistoryAPI } from "../services/historyService";
 
 const VideoDetails = () => {
   const [video, setVideo] = useState([]);
   const [relatedVideos, setRelatedVideos] = useState([]);
+  const [categoryId, setCategoryId] = useState("");
   const { id } = useParams();
   const [isLoadingVideo, setLoadingVideo] = useState(false);
   const [isLoadingrelatedVideos, setLoadingrelatedVideos] = useState(false);
@@ -23,6 +25,13 @@ const VideoDetails = () => {
   useEffect(() => {
     fetchVideoDetails();
   }, [id]);
+
+  useEffect(() => {
+    if (categoryId !== "") {
+      addHistory();
+    }
+  }, [id, categoryId]);
+
   useEffect(() => {
     if (video?.snippet?.title) {
       fetchRelatedVideos();
@@ -37,40 +46,35 @@ const VideoDetails = () => {
     setLoadingVideo(true);
     changeLoading(true);
 
-    if (id) {
+    if (id !== "undefined") {
       try {
         const data = await getVideoVideoDetailsAPI(id);
         if (data && data?.items[0]) {
           setVideo(data?.items[0]);
+          setCategoryId(data?.items[0]?.snippet?.categoryId);
         } else {
           setVideo([]);
+          setCategoryId("");
         }
       } catch (error) {
         console.log(error);
         setVideo([]);
+        setCategoryId("");
       }
     }
     changeLoading(false);
     setLoadingVideo(false);
   };
 
-  // const fetchRelatedVideos = async () => {
-  //   setLoadingrelatedVideos(true);
-  //   if (id) {
-  //     try {
-  //       const data = await getRelatedVideosAPI(id);
-  //       if (data && data?.errorId === "Success") {
-  //         setRelatedVideos(data?.items);
-  //       } else {
-  //         setRelatedVideos([]);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //       setRelatedVideos([]);
-  //     }
-  //   }
-  //   setLoadingrelatedVideos(false);
-  // };
+  const addHistory = async () => {
+    if (id !== "undefined" && categoryId !== "") {
+      try {
+        await addHistoryAPI(id, categoryId);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   const fetchRelatedVideos = async () => {
     setLoadingrelatedVideos(true);

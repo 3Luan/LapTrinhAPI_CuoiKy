@@ -28,7 +28,7 @@ export const categories = [
     name: "Video đã xem",
     icon: <MdOutlineReplay />,
     type: "category",
-    link: "/",
+    link: "/history",
   },
   {
     name: "Danh sách phát",

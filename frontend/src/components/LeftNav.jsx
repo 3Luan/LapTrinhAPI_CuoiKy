@@ -47,10 +47,10 @@ const LeftNav = () => {
                   }
                 }}
                 className={`${
-                  selectedCategory === item.name ? "bg-white/[0.15]" : ""
+                  selectedCategory === item.name ? "bg-black/[0.15]" : ""
                 }`}
               />
-              {item.divider && <hr className="my-5 border-white/[0.2]" />}
+              {item.divider && <hr className="my-5 border-black/[0.2]" />}
             </React.Fragment>
           );
         })}

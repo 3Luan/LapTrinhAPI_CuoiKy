@@ -30,12 +30,12 @@ const userSchema = new mongoose.Schema(
     accessToken: { type: String, require: true },
     refreshToken: { type: String, require: true },
     // posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
-    // history: [
-    //   {
-    //     videoId: { type: String },
-    //     addedAt: { type: Date, default: Date.now },
-    //   },
-    // ],
+    history: [
+      {
+        videoId: { type: String },
+        addedAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   {
     timestamps: true,

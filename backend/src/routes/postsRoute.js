@@ -8,17 +8,19 @@ const storage = multer.memoryStorage(); // You can change this to diskStorage if
 const upload = multer({ storage: storage });
 
 router.post(
-  "/createPosts",
+  "/createPost",
   checkJWT,
-  upload.fields([
-    { name: "images", maxCount: 10 },
-    { name: "files", maxCount: 10 },
-  ]),
-  postsController.createPosts
+  upload.fields([{ name: "images", maxCount: 10 }]),
+  postsController.createPost
 );
-router.get("/getPosts", checkJWT, postsController.getPosts);
+router.get("/getPosts/:currentPage", checkJWT, postsController.getPosts);
+
 router.delete("/deletePosts", checkJWT, postsController.getPosts);
-router.post("/toggleLikePost", checkJWT, postsController.toggleLikePost);
+
+router.post("/likePost", checkJWT, postsController.likePost);
+
+router.post("/unLikePost", checkJWT, postsController.unLikePost);
+
 router.get(
   "/getPostsByUserId/:userId",
   checkJWT,

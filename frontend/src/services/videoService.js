@@ -66,6 +66,15 @@ export const getPopularMusicVideosAPI = () => {
   });
 };
 
+export const getVideoByIdAPI = (videoId) => {
+  return youtubeApi.get(`videos`, {
+    params: {
+      part: "snippet,statistics,contentDetails",
+      id: videoId,
+    },
+  });
+};
+
 // // Lấy video trong danh sách phát
 // export const getPlaylistVideosAPI = (playlistId) => {
 //   return youtubeApi.get("playlistItems", {

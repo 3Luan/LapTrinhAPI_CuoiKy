@@ -6,7 +6,6 @@ import { getLikedVideosAPI } from "../services/likeVideoService";
 import PostCard from "../components/card/PostCard";
 import { useDispatch, useSelector } from "react-redux";
 
-
 const Profile = () => {
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
@@ -49,7 +48,7 @@ const Profile = () => {
     <div className="flex flex-row h-[calc(100%-56px)] ">
       <LeftNav />
       <div className="grow w-[calc(100%-240px)] h-full overflow-y-auto bg-pink-50 custom-scrollbar">
-        <section class="w-full overflow-hidden dark:bg-gray-900 min-h-full">
+        <section class="w-full overflow-hidden min-h-full">
           <div class="flex flex-col">
             <img
               src={

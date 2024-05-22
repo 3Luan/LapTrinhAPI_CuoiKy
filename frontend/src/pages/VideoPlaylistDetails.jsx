@@ -5,7 +5,6 @@ import { BsFillCheckCircleFill } from "react-icons/bs";
 import { AiOutlineLike } from "react-icons/ai";
 import { abbreviateNumber } from "js-abbreviation-number";
 
-import SuggestionVideoCard from "../components/card/VideoPlaylistCard";
 import {
   getRelatedVideosAPI,
   getVideoVideoDetailsAPI,
@@ -16,6 +15,8 @@ import {
   getPlaylistVideosAPI,
 } from "../services/playlistService";
 import VideoPlaylistCard from "../components/card/VideoPlaylistCard";
+import SuggestionVideoCard from "../components/card/SuggestionVideoCard";
+import { addHistoryAPI } from "../services/historyService";
 
 const VideoPlaylistDetails = () => {
   const [video, setVideo] = useState([]);
@@ -26,10 +27,17 @@ const VideoPlaylistDetails = () => {
   const [isLoadingRelatedVideos, setLoadingRelatedVideos] = useState(false);
   const [isLoadingPlaylistVideos, setLoadingPlaylistVideos] = useState(false);
   const { changeLoading } = useContext(Context);
+  const [categoryId, setCategoryId] = useState("");
 
   useEffect(() => {
     fetchVideoDetails();
   }, [videoId]);
+
+  useEffect(() => {
+    if (categoryId !== "") {
+      addHistory();
+    }
+  }, [videoId, categoryId]);
 
   useEffect(() => {
     fetchPlaylistVideos();
@@ -49,21 +57,34 @@ const VideoPlaylistDetails = () => {
     setLoadingVideo(true);
     changeLoading(true);
 
-    if (videoId) {
+    if (videoId !== "undefined") {
       try {
         const data = await getVideoVideoDetailsAPI(videoId);
         if (data && data?.items[0]) {
           setVideo(data?.items[0]);
+          setCategoryId(data?.items[0]?.snippet?.categoryId);
         } else {
           setVideo([]);
+          setCategoryId("");
         }
       } catch (error) {
         console.log(error);
         setVideo([]);
+        setCategoryId("");
       }
     }
     changeLoading(false);
     setLoadingVideo(false);
+  };
+
+  const addHistory = async () => {
+    if (videoId !== "undefined" && categoryId !== "") {
+      try {
+        await addHistoryAPI(videoId, categoryId);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   const fetchRelatedVideos = async () => {
@@ -99,8 +120,6 @@ const VideoPlaylistDetails = () => {
     }
     setLoadingPlaylistVideos(false);
   };
-
-  console.log("relatedVideos", videoInPlaylist);
 
   return (
     <div className="flex justify-center flex-row h-[calc(100%-56px)] bg-pink-50">

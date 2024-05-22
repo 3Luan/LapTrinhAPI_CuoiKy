@@ -11,6 +11,7 @@ import Trending from "../pages/Trending";
 import Community from "../pages/Community";
 import Profile from "../pages/Profile";
 import VideoPlaylistDetails from "../pages/VideoPlaylistDetails";
+import History from "../pages/History";
 
 const AppRoutes = () => {
   const auth = useSelector((state) => state.auth);
@@ -47,6 +48,15 @@ const AppRoutes = () => {
           {/* Video thịnh hành */}
           <Route path="/trending" element={<Trending />} />
 
+          {/* Video đã xem */}
+          <Route
+            path="/history"
+            element={
+              <PrivateRoutes>
+                <History />
+              </PrivateRoutes>
+            }
+          />
           {/* Danh sách phát */}
           <Route
             path="/playlist"

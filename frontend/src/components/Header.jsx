@@ -15,8 +15,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { handleRefresh } from "../redux/auth/authAction";
 import { logoutAPI } from "../services/authService";
 import { getPlaylistIdAPI } from "../services/playlistService";
-import profileUser from "../images/profile-user.png"
-import logOut from "../images/logout.png"
+import profileUser from "../images/profile-user.png";
+import logOut from "../images/logout.png";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -128,14 +128,19 @@ const Header = () => {
                 className="bg-pink-50 px-7 py-7 rounded-md mt-4"
               >
                 <Popup.Content>
-                  
-                  <Link to={`/profile`} className="flex items-center">
+                  <Link
+                    to={`/profile`}
+                    className="flex items-center"
+                    onClick={() => {
+                      setShowPopup(false);
+                    }}
+                  >
                     <img
-                    className="h-5 w-5"
-                    src = {profileUser}
-                    alt = "profileuser"
+                      className="h-5 w-5"
+                      src={profileUser}
+                      alt="profileuser"
                     />
-                     <span className="ml-2">Trang cá nhân </span>
+                    <span className="ml-2">Trang cá nhân </span>
                   </Link>
 
                   <button
@@ -144,11 +149,7 @@ const Header = () => {
                     }}
                     className="flex items-center pt-3"
                   >
-                    <img
-                    className="h-5 w-5"
-                    src = {logOut}
-                    alt = "logout"
-                    />
+                    <img className="h-5 w-5" src={logOut} alt="logout" />
                     <span className="ml-2">Đăng xuất </span>
                   </button>
                 </Popup.Content>

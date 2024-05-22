@@ -4,8 +4,9 @@ import { abbreviateNumber } from "js-abbreviation-number";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import moment from "moment";
 import "moment/locale/vi";
+import numeral from "numeral";
 
-const TrendingVideoCard = ({ data }) => {
+const HistoryVideoCard = ({ data }) => {
   moment.locale("vi");
   return (
     <Link to={`/video/${data?.id}`}>
@@ -40,7 +41,9 @@ const TrendingVideoCard = ({ data }) => {
                 )} */}
               </span>
               <div className="flex text-sm font-semibold text-black/[0.7] truncate overflow-hidden">
-                <span>110 views</span>
+                <span>
+                  {numeral(data?.statistics?.viewCount).format("0,0")} lượt xem
+                </span>
                 <span className="flex text-[24px] leading-none font-bold text-black/[0.7] relative top-[-10px] mx-1">
                   .
                 </span>
@@ -56,4 +59,4 @@ const TrendingVideoCard = ({ data }) => {
   );
 };
 
-export default TrendingVideoCard;
+export default HistoryVideoCard;

@@ -43,7 +43,7 @@ const loginWithGoogleCallback = (req, res, next) => {
       }
 
       const youtubeProfile = response.data.items[0];
-      console.log("youtubeProfile", response.data.items[0].brandingSettings);
+
       let userData = await userModel.findOne({ _id: youtubeProfile.id });
 
       if (userData) {

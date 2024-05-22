@@ -4,9 +4,11 @@ const connectDB = require("./src/config/database");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const app = express();
-app.use(express.json());
 const cors = require("cors");
 require("./src/config/passport");
+
+// Cấu hình các tệp tĩnh từ thư mục uploads
+app.use(express.static("uploads/images"));
 
 const PORT = process.env.PORT || 3001;
 const HOST_NAME = process.env.HOST_NAME || "localhost";
