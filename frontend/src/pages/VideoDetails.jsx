@@ -103,12 +103,12 @@ const VideoDetails = () => {
         <div className="flex flex-col lg:w-[calc(100%-350px)] xl:w-[calc(100%-400px)] px-4 py-3 lg:py-6 overflow-y-auto">
           {!isLoadingVideo && (
             <>
-              <div className="h-[200px] md:h-[400px] lg:h-[400px] xl:h-[550px] ml-[-16px] lg:ml-0 mr-[-16px] lg:mr-0">
+              <div className="h-[300px] md:h-[300px] lg:h-[400px] xl:h-[550px] ml-[-16px] lg:ml-0 mr-[-16px] lg:mr-0">
                 <ReactPlayer
                   url={`https://www.youtube.com/watch?v=${id}`}
                   controls
                   width="100%"
-                  // height="100%"
+                  height="100%"
                   style={{ backgroundColor: "#000000" }}
                   playing={true}
                 />
