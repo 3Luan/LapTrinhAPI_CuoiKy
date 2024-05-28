@@ -4,15 +4,16 @@ import ReactPlayer from "react-player/youtube";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import { AiOutlineLike } from "react-icons/ai";
 import { abbreviateNumber } from "js-abbreviation-number";
-
 import {
   getRelatedVideosAPI,
+  getVideoByIdAPI,
   getVideoVideoDetailsAPI,
 } from "../services/videoService";
 import { Context } from "../context/contextApi";
 import {
-  getPlaylistIdAPI,
+  checkAndCreatePlaylistAPI,
   getPlaylistVideosAPI,
+  getVideoInAutoPlaylistAPI,
 } from "../services/playlistService";
 import VideoPlaylistCard from "../components/card/VideoPlaylistCard";
 import SuggestionVideoCard from "../components/card/SuggestionVideoCard";
@@ -22,7 +23,7 @@ const VideoPlaylistDetails = () => {
   const [video, setVideo] = useState([]);
   const [videoInPlaylist, setVideoInPlaylist] = useState([]);
   const [relatedVideos, setRelatedVideos] = useState([]);
-  const { playlistId, videoId } = useParams();
+  const { playlistId, videoId, autoPlaylistId } = useParams();
   const [isLoadingVideo, setLoadingVideo] = useState(false);
   const [isLoadingRelatedVideos, setLoadingRelatedVideos] = useState(false);
   const [isLoadingPlaylistVideos, setLoadingPlaylistVideos] = useState(false);
@@ -81,6 +82,7 @@ const VideoPlaylistDetails = () => {
     if (videoId !== "undefined" && categoryId !== "") {
       try {
         await addHistoryAPI(videoId, categoryId);
+        await checkAndCreatePlaylistAPI(videoId, categoryId);
       } catch (error) {
         console.log(error);
       }
@@ -108,11 +110,31 @@ const VideoPlaylistDetails = () => {
   const fetchPlaylistVideos = async () => {
     setLoadingPlaylistVideos(true);
     try {
-      const data = await getPlaylistVideosAPI(playlistId);
-      if (data?.code === 0) {
-        setVideoInPlaylist(data?.data);
+      let data;
+      if (playlistId === "c") {
+        data = await getVideoInAutoPlaylistAPI(autoPlaylistId);
+        console.log("data", data);
+
+        if (data?.code === 0) {
+          // Lấy danh sách các video IDs từ mảng history
+          const videoIds = data?.data?.videos.map((item) => item);
+
+          let videosInfo = await Promise.all(
+            videoIds.map((videoId) => getVideoByIdAPI(videoId))
+          );
+          // Tạo mảng mới chỉ chứa thông tin chi tiết của video
+          const detailedData = videosInfo.map((info) => info.items[0]);
+          setVideoInPlaylist(detailedData);
+        } else {
+          setVideoInPlaylist([]);
+        }
       } else {
-        setVideoInPlaylist([]);
+        data = await getPlaylistVideosAPI(playlistId);
+        if (data?.code === 0) {
+          setVideoInPlaylist(data?.data);
+        } else {
+          setVideoInPlaylist([]);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -202,7 +224,15 @@ const VideoPlaylistDetails = () => {
                     <VideoPlaylistCard
                       key={index}
                       video={item}
-                      playlistId={playlistId}
+                      playlistId={
+                        playlistId === "c" ? autoPlaylistId : playlistId
+                      }
+                      videoId={
+                        playlistId === "c"
+                          ? item?.id
+                          : item?.contentDetails?.videoId
+                      }
+                      isAutoPlaylist={playlistId === "c" ? true : false}
                     />
                   ))}
                 </div>

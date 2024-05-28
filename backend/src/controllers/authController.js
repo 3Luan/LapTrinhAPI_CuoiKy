@@ -35,11 +35,13 @@ const loginWithGoogleCallback = (req, res, next) => {
         mine: true,
       });
 
-      if (!response.data.items.length) {
-        throw {
-          code: 1,
-          message: "Không tìm thấy kênh YouTube của người dùng",
-        };
+      if (!response?.data?.items?.length) {
+        // throw {
+        //   code: 1,
+        //   message: "Không tìm thấy kênh YouTube của người dùng",
+        // };
+
+        return res.redirect(`${process.env.URL_FRONTEND}`);
       }
 
       const youtubeProfile = response.data.items[0];

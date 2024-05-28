@@ -6,6 +6,7 @@ const imageUploadPath = path.join("uploads/images");
 const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
 
+// Tạo bài viết
 let createPost = async (req, res) => {
   try {
     const { content } = req.body;
@@ -68,6 +69,7 @@ let createPost = async (req, res) => {
   }
 };
 
+// Lấy bài viết
 let getPosts = async (req, res) => {
   try {
     const currentPage = parseInt(req.params.currentPage) || 1;
@@ -154,11 +156,13 @@ let getPosts = async (req, res) => {
   }
 };
 
+// Xóa bài viết
 let deletePosts = async (req, res) => {
   try {
   } catch (error) {}
 };
 
+// Lấy thông tin chi tiết bài viết thông qua ID
 let getPostsById = async (req, res) => {
   try {
     const postId = req.params.postId;
@@ -205,6 +209,7 @@ let getPostsById = async (req, res) => {
   }
 };
 
+// Lấy danh sách bài viết thông qua ID người dùng
 let getPostsByUserId = async (req, res) => {
   try {
     const userId = req.params.userId;

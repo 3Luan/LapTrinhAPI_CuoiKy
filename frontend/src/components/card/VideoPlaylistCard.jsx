@@ -3,11 +3,16 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import "moment/locale/vi";
 
-const VideoPlaylistCard = ({ playlistId, video }) => {
+const VideoPlaylistCard = ({ playlistId, videoId, video, isAutoPlaylist }) => {
+  console.log("video", video);
   moment.locale("vi");
   return (
     <Link
-      to={`/playlist/${playlistId}/video/${video?.contentDetails?.videoId}`}
+      to={
+        isAutoPlaylist
+          ? `/playlist/c/${playlistId}/video/${videoId}`
+          : `/playlist/${playlistId}/c/video/${videoId}`
+      }
     >
       <div className="flex mb-3">
         <div className="relative h-24 lg:h-20 xl:h-24 w-40 min-w-[168px] lg:w-32 lg:min-w-[128px] xl:w-40 xl:min-w-[168px] rounded-xl bg-slate-800 overflow-hidden">

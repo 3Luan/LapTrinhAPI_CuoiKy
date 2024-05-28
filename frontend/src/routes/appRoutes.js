@@ -39,12 +39,6 @@ const AppRoutes = () => {
           {/* Trang chi tiết video */}
           <Route path="/video/:id" element={<VideoDetails />} />
 
-          {/* Trang chi tiết video của danh sách phát */}
-          <Route
-            path="/playlist/:playlistId/video/:videoId"
-            element={<VideoPlaylistDetails />}
-          />
-
           {/* Video thịnh hành */}
           <Route path="/trending" element={<Trending />} />
 
@@ -63,6 +57,16 @@ const AppRoutes = () => {
             element={
               <PrivateRoutes>
                 <Playlist />
+              </PrivateRoutes>
+            }
+          />
+
+          {/* Trang chi tiết video của danh sách phát */}
+          <Route
+            path="/playlist/:playlistId/:autoPlaylistId/video/:videoId"
+            element={
+              <PrivateRoutes>
+                <VideoPlaylistDetails />
               </PrivateRoutes>
             }
           />

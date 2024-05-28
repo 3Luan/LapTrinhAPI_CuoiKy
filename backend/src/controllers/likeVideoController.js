@@ -1,6 +1,7 @@
 const userModel = require("../models/UserModel");
 const { google } = require("googleapis");
 
+// Lấy danh sách video mà user đã like
 let getLikedVideos = async (req, res) => {
   try {
     const userId = req.userId;

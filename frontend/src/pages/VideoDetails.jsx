@@ -12,6 +12,7 @@ import {
 import LeftNav from "../components/LeftNav";
 import { Context } from "../context/contextApi";
 import { addHistoryAPI } from "../services/historyService";
+import { checkAndCreatePlaylistAPI } from "../services/playlistService";
 
 const VideoDetails = () => {
   const [video, setVideo] = useState([]);
@@ -70,6 +71,7 @@ const VideoDetails = () => {
     if (id !== "undefined" && categoryId !== "") {
       try {
         await addHistoryAPI(id, categoryId);
+        await checkAndCreatePlaylistAPI(id, categoryId);
       } catch (error) {
         console.log(error);
       }

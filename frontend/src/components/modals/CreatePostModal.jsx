@@ -74,7 +74,7 @@ const CreatePostModal = ({ openModal, setOpenModal, addPost }) => {
     <>
       {openModal && (
         <>
-          <div className="pt-20 fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
+          <div className="pb-40 fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
             <div className="fixed inset-0 bg-black opacity-50"></div>
             <div
               id="static-modal"

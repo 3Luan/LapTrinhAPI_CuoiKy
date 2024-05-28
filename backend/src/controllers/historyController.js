@@ -4,6 +4,7 @@ const NodeCache = require("node-cache");
 
 const myCache = new NodeCache({ stdTTL: 10 });
 
+// Thêm video vào danh sách  video đã xem
 let addHistory = async (req, res) => {
   try {
     const { videoId, categoryId } = req.body;
@@ -68,6 +69,7 @@ let addHistory = async (req, res) => {
   }
 };
 
+// Lấy danh sách video đã xem của người dùng
 let getHistory = async (req, res) => {
   try {
     const userId = req.userId;

@@ -79,7 +79,6 @@ const PostCard = ({ data }) => {
                 src={data?.user?.avatar}
                 class="rounded-full w-full h-full object-cover "
               />
-              <div></div>
             </div>
             <div class="space-y-2">
               <div class="flex space-x-2 items-center">
