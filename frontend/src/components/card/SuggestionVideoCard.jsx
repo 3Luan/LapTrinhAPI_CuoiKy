@@ -59,6 +59,7 @@ const SuggestionVideoCard = ({ video }) => {
             </span>
             <span className="truncate">
               {moment(video.snippet.publishedAt).fromNow()}
+              
             </span>
           </div>
         </Link>
