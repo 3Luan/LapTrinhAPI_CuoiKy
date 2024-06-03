@@ -5,31 +5,57 @@ import { Context } from "../context/contextApi";
 import { getLikedVideosAPI } from "../services/likeVideoService";
 import PostCard from "../components/card/PostCard";
 import { useDispatch, useSelector } from "react-redux";
+import { getPostsByUserIdAPI } from "../services/postService";
+import { getAutoPlaylistAPI } from "../services/playlistService";
+import MixedPlaylistCard from "../components/card/MixedPlaylistCard";
+import { getVideoByIdAPI } from "../services/videoService";
 
 const Profile = () => {
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const { changeLoading } = useContext(Context);
   const auth = useSelector((state) => state.auth);
+  const [tab, setTab] = useState("posts");
 
   useEffect(() => {
-    document.getElementById("root").classList.add("custom-h");
+    getData("posts");
   }, []);
 
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const getData = async () => {
+  const getData = async (nameTab) => {
     setLoading(true);
     changeLoading(true);
 
     try {
-      const data = await getLikedVideosAPI();
-      if (data?.code === 0) {
-        setData(data?.data);
+      if (nameTab === "posts") {
+        const data = await getPostsByUserIdAPI(auth?.id, 1);
+        if (data?.code === 0) {
+          setData(data?.data);
+        } else {
+          setData([]);
+        }
       } else {
-        setData([]);
+        const data = await getAutoPlaylistAPI();
+
+        if (data?.code === 0) {
+          let videosInfo = await Promise.all(
+            data?.data?.map((item) => getVideoByIdAPI(item?.videoId))
+          );
+          // // Tạo mảng mới chỉ chứa thông tin chi tiết của video
+          const detailedData = videosInfo.map((info) => info.items[0]);
+
+          const playlist = data?.data.map((item, index) => ({
+            playlistId: item.playlistId,
+            video: detailedData[index],
+          }));
+
+          // Đảo ngược thứ tự của mảng data
+          const reversedData = playlist.reverse();
+
+          setData(reversedData);
+          console.log("reversedData", reversedData);
+        } else {
+          setData([]);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -40,9 +66,12 @@ const Profile = () => {
     setLoading(false);
   };
 
-  useEffect(() => {
-    document.getElementById("root").classList.remove("custom-h");
-  }, []);
+  const onclickChangeTab = (nameTab) => {
+    if (tab !== nameTab) {
+      setTab(nameTab);
+      getData(nameTab);
+    }
+  };
 
   return (
     <div className="flex flex-row h-[calc(100%-56px)] ">
@@ -80,13 +109,46 @@ const Profile = () => {
             <div class="xl:w-[80%] lg:w-[90%] md:w-[90%] sm:w-[92%] xs:w-[90%] mx-auto flex flex-col gap-4 items-center relative lg:-top-8 md:-top-6 sm:-top-4 xs:-top-4">
               <div class="w-full my-auto py-6 flex flex-col justify-center gap-2">
                 <div class=" xs:w-full xs:h-[10rem] flex text-black gap-3">
-                  <button class="border-b-4 border-blue-600 lg:text-xl md:text-xl xs:text-lg">
+                  <button
+                    class={`${
+                      tab === "posts" ? "border-b-4" : ""
+                    } border-blue-600 lg:text-xl md:text-xl xs:text-lg`}
+                    onClick={() => {
+                      onclickChangeTab("posts");
+                    }}
+                  >
                     Bài viết
                   </button>
-                  <button class="border-blue-600 lg:text-xl md:text-xl xs:text-lg">
-                    Danh sách phát
+
+                  <button
+                    class={`${
+                      tab === "autoPlaylist" ? "border-b-4" : ""
+                    } border-blue-600 lg:text-xl md:text-xl xs:text-lg`}
+                    onClick={() => {
+                      onclickChangeTab("autoPlaylist");
+                    }}
+                  >
+                    Danh sách kết hợp
                   </button>
                 </div>
+                <hr />
+                {tab === "posts" ? (
+                  <div className="grid grid-cols-1 gap-2 p-5">
+                    {data?.map((item) => {
+                      return <PostCard data={item} />;
+                    })}
+                  </div>
+                ) : (
+                  <div className="grow w-full overflow-y-auto bg-pink-50 custom-scrollbar">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-5">
+                      {data?.map((item) => {
+                        console.log(item);
+
+                        return <MixedPlaylistCard key={item?.id} data={item} />;
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

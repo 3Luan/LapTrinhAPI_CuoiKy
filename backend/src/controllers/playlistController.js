@@ -81,6 +81,8 @@ let getPlaylistId = async (req, res) => {
       })
     );
 
+    // console.log("playlistsWithFirstVideoId", playlistsWithFirstVideoId);
+
     res.status(200).json({
       code: 0,
       message: "Lấy tất cả ID danh sách phát và video đầu tiên thành công",
@@ -139,6 +141,283 @@ let getPlaylistVideos = async (req, res) => {
     res.status(200).json({
       code: error.code || 1,
       message: error.message || "Lỗi: getPlaylistVideos",
+    });
+  }
+};
+
+// thêm video vào danh sách phát
+const addVideoToPlaylist = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { playlistId, videoId } = req.body;
+
+    const user = await userModel.findById(userId);
+    if (!user) {
+      throw {
+        code: 1,
+        message: "Lỗi: Người dùng không tồn tại",
+      };
+    }
+
+    const auth = new google.auth.OAuth2();
+    auth.setCredentials({ access_token: user.accessToken });
+
+    const youtube = google.youtube({ version: "v3", auth });
+
+    // Lấy danh sách các video hiện có trong danh sách phát
+    const playlistItemsResponse = await youtube.playlistItems.list({
+      part: "snippet,contentDetails",
+      playlistId: playlistId,
+      maxResults: 50, // Số lượng video tối đa muốn lấy, có thể điều chỉnh
+    });
+
+    const playlistItems = playlistItemsResponse.data.items;
+
+    // Kiểm tra xem video đã có trong danh sách phát chưa
+    const videoExists = playlistItems.some(
+      (item) => item.contentDetails.videoId === videoId
+    );
+
+    if (videoExists) {
+      return res.status(200).json({
+        code: 1,
+        message: "Video này đã tồn tại trong danh sách phát",
+      });
+    }
+
+    // Nếu video chưa có trong danh sách phát, thêm video vào
+    const addVideoResponse = await youtube.playlistItems.insert({
+      part: "snippet",
+      requestBody: {
+        snippet: {
+          playlistId: playlistId,
+          resourceId: {
+            kind: "youtube#video",
+            videoId: videoId,
+          },
+        },
+      },
+    });
+
+    const playlistItem = addVideoResponse.data;
+
+    res.status(200).json({
+      code: 0,
+      message: "Thêm video vào danh sách phát thành công",
+      data: playlistItem,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(200).json({
+      code: error.code || 1,
+      message: error.message || "Lỗi: addVideoToPlaylist",
+    });
+  }
+};
+
+// Xóa video khỏi danh sách phát
+const deleteVideoFromPlaylist = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { playlistId, videoId } = req.body;
+    console.log("playlistId, videoId", playlistId, videoId);
+    const user = await userModel.findById(userId);
+    if (!user) {
+      throw {
+        code: 1,
+        message: "Lỗi: Người dùng không tồn tại",
+      };
+    }
+
+    const auth = new google.auth.OAuth2();
+    auth.setCredentials({ access_token: user.accessToken });
+
+    const youtube = google.youtube({ version: "v3", auth });
+
+    // Lấy danh sách các video hiện có trong danh sách phát
+    const playlistItemsResponse = await youtube.playlistItems.list({
+      part: "snippet,contentDetails",
+      playlistId: playlistId,
+      maxResults: 50, // Số lượng video tối đa muốn lấy, có thể điều chỉnh
+    });
+
+    const playlistItems = playlistItemsResponse.data.items;
+
+    // Kiểm tra xem video đã có trong danh sách phát chưa
+    const videoIndex = playlistItems.findIndex(
+      (item) => item.contentDetails.videoId === videoId
+    );
+
+    if (videoIndex === -1) {
+      return res.status(200).json({
+        code: 1,
+        message: "Video này không tồn tại trong danh sách phát",
+      });
+    }
+
+    // Nếu video có trong danh sách phát, xóa video đó ra khỏi danh sách phát
+    const deleteVideoResponse = await youtube.playlistItems.delete({
+      id: playlistItems[videoIndex].id,
+    });
+
+    res.status(200).json({
+      code: 0,
+      message: "Xóa video khỏi danh sách phát thành công",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(200).json({
+      code: error.code || 1,
+      message: error.message || "Lỗi: deleteVideoFromPlaylist",
+    });
+  }
+};
+
+// Tạo danh sách phát và đông thời thêm 1 video vào đó
+const createPlaylistAndAddVideo = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { title, videoId } = req.body;
+
+    if ((!title, !videoId)) {
+      throw {
+        code: 1,
+        message: "Lỗi: Thông tin không đủ",
+      };
+    }
+
+    const user = await userModel.findById(userId);
+    if (!user) {
+      throw {
+        code: 1,
+        message: "Lỗi: Người dùng không tồn tại",
+      };
+    }
+
+    const auth = new google.auth.OAuth2();
+    auth.setCredentials({ access_token: user.accessToken });
+
+    const youtube = google.youtube({ version: "v3", auth });
+
+    // Tạo danh sách phát mới
+    const playlistResponse = await youtube.playlists.insert({
+      part: "snippet,status",
+      requestBody: {
+        snippet: {
+          title: title || "Danh sách phát mới",
+        },
+        status: {
+          privacyStatus: "private",
+        },
+      },
+    });
+
+    const playlist = playlistResponse.data;
+    const playlistId = playlist.id;
+
+    // Thêm video vào danh sách phát vừa tạo
+    const addVideoResponse = await youtube.playlistItems.insert({
+      part: "snippet",
+      requestBody: {
+        snippet: {
+          playlistId: playlistId,
+          resourceId: {
+            kind: "youtube#video",
+            videoId: videoId,
+          },
+        },
+      },
+    });
+
+    const playlistItem = addVideoResponse.data;
+
+    res.status(200).json({
+      code: 0,
+      message: "Tạo danh sách phát và thêm video thành công",
+      data: {
+        playlist,
+        playlistItem,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(200).json({
+      code: error.code || 1,
+      message: error.message || "Lỗi: createPlaylistAndAddVideo",
+    });
+  }
+};
+
+// Xóa danh sách phát
+const deletePlaylist = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { playlistId } = req.body;
+
+    console.log("playlistId", playlistId);
+
+    if (!playlistId) {
+      throw {
+        code: 1,
+        message: "Lỗi: Thông tin không đủ",
+      };
+    }
+
+    const user = await userModel.findById(userId);
+    if (!user) {
+      throw {
+        code: 1,
+        message: "Lỗi: Người dùng không tồn tại",
+      };
+    }
+
+    const auth = new google.auth.OAuth2();
+    auth.setCredentials({ access_token: user.accessToken });
+
+    const youtube = google.youtube({ version: "v3", auth });
+
+    // Kiểm tra xem danh sách phát có tồn tại không
+    try {
+      const response = await youtube.playlists.list({
+        part: "id",
+        id: playlistId,
+      });
+
+      if (!response.data.items || response.data.items.length === 0) {
+        throw {
+          code: 1,
+          message: "Danh sách phát không tồn tại",
+        };
+      }
+    } catch (error) {
+      if (
+        error.errors &&
+        error.errors[0] &&
+        error.errors[0].reason === "playlistNotFound"
+      ) {
+        throw {
+          code: 1,
+          message: "Danh sách phát không tồn tại",
+        };
+      } else {
+        throw error;
+      }
+    }
+
+    // Gọi API để xóa danh sách phát
+    await youtube.playlists.delete({
+      id: playlistId,
+    });
+
+    res.status(200).json({
+      code: 0,
+      message: "Xóa danh sách phát thành công",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(200).json({
+      code: error.code || 1,
+      message: error.message || "Lỗi: deletePlaylist",
     });
   }
 };
@@ -316,6 +595,11 @@ let getVideoInAutoPlaylist = async (req, res) => {
 module.exports = {
   getPlaylistId,
   getPlaylistVideos,
+  addVideoToPlaylist,
+  deleteVideoFromPlaylist,
+  createPlaylistAndAddVideo,
+  deletePlaylist,
+
   checkAndCreatePlaylist,
   getAutoPlaylist,
   getVideoInAutoPlaylist,

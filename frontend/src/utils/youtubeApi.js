@@ -9,7 +9,7 @@ import axios from "axios";
 const instance = axios.create({
   baseURL: "https://youtube.googleapis.com/youtube/v3/",
   params: {
-    key: "AIzaSyAE4TMUijiy75K8KQpv5bOjZocnZ-BlRdQ",
+    key: "AIzaSyBWqhobrT6nFXBQyYjuJcNg6IgsoCy0i48",
   },
 });
 

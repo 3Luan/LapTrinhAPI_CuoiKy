@@ -27,6 +27,16 @@ const userSchema = new mongoose.Schema(
     subscriberCount: {
       type: String,
     },
+    isAdmin: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    isBan: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
     accessToken: { type: String, require: true },
     refreshToken: { type: String, require: true },
     // posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],

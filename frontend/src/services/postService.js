@@ -12,6 +12,12 @@ export const getPostsAPI = (currentPage) => {
   return backendApi.get(`/api/post/getPosts/${currentPage}`);
 };
 
+export const getPostsByUserIdAPI = (userId, currentPage) => {
+  return backendApi.get(`/api/post/getPostsByUserId/${userId}/${currentPage}`);
+};
+
+//////////////////////////
+
 export const updatePostAPI = (formData) => {
   return backendApi.post(`/api/post/updatePost`, formData, {
     headers: {

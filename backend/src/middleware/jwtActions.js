@@ -35,7 +35,31 @@ const checkJWT = (req, res, next) => {
   });
 };
 
+const checkAdminJWT = (req, res, next) => {
+  const token = req.cookies.tokenAdmin;
+
+  if (!token) {
+    return res.status(200).json({
+      code: 1,
+      message: "Đăng nhập để thực hiện thao tác này",
+    });
+  }
+  jwt.verify(token, process.env.JWT_SECRET, async (error, resutl) => {
+    if (error) {
+      return res.status(200).json({
+        code: 1,
+        message: "Đăng nhập để thực hiện thao tác này",
+      });
+    }
+
+    // check jwt thành công sẽ lưu userId vào req
+    req.adminId = resutl.id;
+    next();
+  });
+};
+
 module.exports = {
   createJWT: createJWT,
   checkJWT: checkJWT,
+  checkAdminJWT: checkAdminJWT,
 };

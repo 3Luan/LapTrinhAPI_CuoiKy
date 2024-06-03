@@ -10,6 +10,33 @@ export const getPlaylistVideosAPI = (playlistId) => {
   return backendApi.get(`/api/playlist/getPlaylistVideos/${playlistId}`);
 };
 
+export const addVideoToPlaylistAPI = (playlistId, videoId) => {
+  return backendApi.post(`/api/playlist/addVideoToPlaylist`, {
+    playlistId,
+    videoId,
+  });
+};
+
+export const deleteVideoFromPlaylistAPI = (playlistId, videoId) => {
+  return backendApi.post(`/api/playlist/deleteVideoFromPlaylist`, {
+    playlistId,
+    videoId,
+  });
+};
+
+export const createPlaylistAndAddVideoAPI = (title, videoId) => {
+  return backendApi.post(`/api/playlist/createPlaylistAndAddVideo`, {
+    title,
+    videoId,
+  });
+};
+
+export const deletePlaylistAPI = (playlistId) => {
+  return backendApi.post(`/api/playlist/deletePlaylist`, {
+    playlistId,
+  });
+};
+
 ///////////////////////// HỆ THỐNG /////////////////////////
 
 export const checkAndCreatePlaylistAPI = (videoId, categoryId) => {

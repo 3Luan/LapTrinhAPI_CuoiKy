@@ -88,6 +88,12 @@ const loginWithGoogleCallback = (req, res, next) => {
         });
       }
 
+      const user = await userModel.findById(youtubeProfile?.id);
+
+      if (user && user?.isBan) {
+        return res.redirect(`${process.env.URL_FRONTEND}/profile`);
+      }
+
       let payload = {
         id: userData._id,
       };

@@ -15,8 +15,11 @@ export const authSlice = createSlice({
     subscriberCount: "",
     accessToken: "",
     refreshToken: "",
+    isBan: "",
+    isAdmin: "",
 
     isLoading: false,
+    isInit: true,
     isError: false,
     auth: false,
   },
@@ -28,6 +31,7 @@ export const authSlice = createSlice({
       state.isLoading = false;
       state.isError = true;
       state.auth = false;
+      state.isInit = false;
 
       state.id = "";
       state.name = "";
@@ -41,11 +45,14 @@ export const authSlice = createSlice({
       state.subscriberCount = "";
       state.accessToken = "";
       state.refreshToken = "";
+      state.isBan = "";
+      state.isAdmin = "";
     },
     refreshSuccess: (state, action) => {
       state.isLoading = false;
       state.isError = false;
       state.auth = true;
+      state.isInit = false;
 
       state.id = action.payload._id;
       state.name = action.payload.name;
@@ -59,6 +66,8 @@ export const authSlice = createSlice({
       state.subscriberCount = action.payload.subscriberCount;
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
+      state.isBan = action.payload.isBan;
+      state.isAdmin = action.payload.isAdmin;
     },
   },
 });

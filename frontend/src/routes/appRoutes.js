@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "../pages/Home";
 import SearchResult from "../pages/SearchResult";
 import VideoDetails from "../pages/VideoDetails";
@@ -12,23 +12,32 @@ import Community from "../pages/Community";
 import Profile from "../pages/Profile";
 import VideoPlaylistDetails from "../pages/VideoPlaylistDetails";
 import History from "../pages/History";
+import LoginAdmin from "../admin/pages/LoginAdmin";
+import PrivateAdminRoutes from "./privateAdminRoutes";
+import HomeAdmin from "../admin/pages/HomeAdmin";
+import Account from "../admin/pages/Account";
+import AccountLockedRoutes from "./accountLockedRoutes";
+import PostDelete from "../admin/pages/PostDelete";
 
 const AppRoutes = () => {
   const auth = useSelector((state) => state.auth);
+  const location = useLocation();
 
-  if (auth?.isLoading) {
+  if (auth.isInit && auth?.isLoading) {
     return (
       <>
         <div className="flex flex-col h-full ">
-          <Header />
+          {!location.pathname.startsWith("/admin") && <Header />}
         </div>
       </>
     );
   }
+
   return (
     <>
       <div className="flex flex-col h-full ">
-        <Header />
+        {!location.pathname.startsWith("/admin") && <Header />}
+
         <Routes>
           {/* Home */}
           <Route path="/" exact element={<Home />} />
@@ -47,7 +56,9 @@ const AppRoutes = () => {
             path="/history"
             element={
               <PrivateRoutes>
-                <History />
+                <AccountLockedRoutes>
+                  <History />
+                </AccountLockedRoutes>
               </PrivateRoutes>
             }
           />
@@ -56,7 +67,9 @@ const AppRoutes = () => {
             path="/playlist"
             element={
               <PrivateRoutes>
-                <Playlist />
+                <AccountLockedRoutes>
+                  <Playlist />
+                </AccountLockedRoutes>
               </PrivateRoutes>
             }
           />
@@ -66,7 +79,9 @@ const AppRoutes = () => {
             path="/playlist/:playlistId/:autoPlaylistId/video/:videoId"
             element={
               <PrivateRoutes>
-                <VideoPlaylistDetails />
+                <AccountLockedRoutes>
+                  <VideoPlaylistDetails />
+                </AccountLockedRoutes>
               </PrivateRoutes>
             }
           />
@@ -76,7 +91,9 @@ const AppRoutes = () => {
             path="/likedVideo"
             element={
               <PrivateRoutes>
-                <LikedVideo />
+                <AccountLockedRoutes>
+                  <LikedVideo />
+                </AccountLockedRoutes>
               </PrivateRoutes>
             }
           />
@@ -86,7 +103,9 @@ const AppRoutes = () => {
             path="/community"
             element={
               <PrivateRoutes>
-                <Community />
+                <AccountLockedRoutes>
+                  <Community />
+                </AccountLockedRoutes>
               </PrivateRoutes>
             }
           />
@@ -96,8 +115,40 @@ const AppRoutes = () => {
             path="/profile"
             element={
               <PrivateRoutes>
-                <Profile />
+                <AccountLockedRoutes>
+                  <Profile />
+                </AccountLockedRoutes>
               </PrivateRoutes>
+            }
+          />
+
+          {/* Admin Routes */}
+          <Route path="/admin/login" element={<LoginAdmin />} />
+
+          <Route
+            path="/admin"
+            element={
+              <PrivateAdminRoutes>
+                <HomeAdmin />
+              </PrivateAdminRoutes>
+            }
+          />
+
+          <Route
+            path="/admin/quan-ly-tai-khoan"
+            element={
+              <PrivateAdminRoutes>
+                <Account />
+              </PrivateAdminRoutes>
+            }
+          />
+
+          <Route
+            path="/admin/quan-ly-bai-viet"
+            element={
+              <PrivateAdminRoutes>
+                <PostDelete />
+              </PrivateAdminRoutes>
             }
           />
 

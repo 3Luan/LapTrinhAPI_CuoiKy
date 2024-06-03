@@ -4,14 +4,12 @@ import {
   getPostDetailByIdAPI,
   updatePostAPI,
 } from "../../services/postService";
-import CustomCreatePost from "../CustomCreatePost";
-import TextInput from "../TextInput";
 import ReactQuill from "react-quill";
-import CustomButton from "../CustomButton";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import Loading from "../Loading";
 import { useLocation } from "react-router-dom";
+import TextInput from "../../admin/components/TextInput";
 
 const EditPostModal = ({
   openModal,
@@ -19,36 +17,23 @@ const EditPostModal = ({
   postId,
   addPost,
   deletePost,
+  data,
 }) => {
   const auth = useSelector((state) => state.auth);
-  const [post, setPost] = useState();
   const [content, setContent] = useState("");
   const [loadUpdatePost, setLoadUpdatePost] = useState(false);
-  const [title, setTitle] = useState("");
   const [images, setImages] = useState([]);
-  const [files, setFiles] = useState([]);
   const quillRef = useRef();
   const location = useLocation();
 
-  useEffect(() => {
-    if (openModal && postId) {
-      getData();
-    }
-  }, [openModal, postId]);
+  console.log("datadata", data);
 
   useEffect(() => {
-    if (post) {
-      setTitle(post?.postDetail?.title);
-      setContent(post?.postDetail?.content);
-      setImages(post?.postDetail?.images);
-      setFiles(post?.postDetail?.files);
+    if (data) {
+      setContent(data?.content);
+      setImages(data?.images);
     }
-  }, [post]);
-
-  const getData = async () => {
-    const data = await getPostDetailByIdAPI(postId);
-    setPost(data);
-  };
+  }, [data]);
 
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -56,12 +41,6 @@ const EditPostModal = ({
 
   const handleRemoveImage = (indexToRemove) => {
     setImages(images.filter((_, index) => index !== indexToRemove));
-  };
-
-  const handleRemoveFile = (indexToRemove) => {
-    setFiles((prevFiles) =>
-      prevFiles.filter((_, index) => index !== indexToRemove)
-    );
   };
 
   const handleImageUpload = (e) => {
@@ -73,25 +52,13 @@ const EditPostModal = ({
     setImages((prevImages) => [...prevImages, ...selectedImages]);
   };
 
-  const handleFileUpload = (e) => {
-    const selectedFiles = Array.from(e.target.files);
-    if (selectedFiles.length + files.length > 10) {
-      toast.error("Chỉ có thể tải lên tối đa 10 tệp.");
-      return;
-    }
-    setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
-  };
-
   const onclickUpdatePosts = async () => {
-    if (!title) {
-      return toast.error("Tiêu đề không được bỏ trống!");
-    } else if (!content) {
+    if (!content) {
       return toast.error("Nội dung không được bỏ trống!");
     } else {
       setLoadUpdatePost(true);
 
       const formData = new FormData();
-      formData.append("title", title);
       formData.append("postId", postId);
       formData.append("content", content);
 
@@ -100,13 +67,6 @@ const EditPostModal = ({
           formData.append("imagesOld", images[i]._id);
         } else {
           formData.append("images", images[i]);
-        }
-      }
-      for (let i = 0; i < files.length; i++) {
-        if (files[i]?._id) {
-          formData.append("filesOld", files[i]._id);
-        } else {
-          formData.append("files", files[i]);
         }
       }
 
@@ -145,7 +105,7 @@ const EditPostModal = ({
     <>
       {openModal && (
         <>
-          {!post ? (
+          {!data ? (
             <div className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
               <div className="fixed inset-0 bg-black opacity-50"></div>
               <div
@@ -187,20 +147,12 @@ const EditPostModal = ({
                     </button>
                   </div>
                   <div className="bg-white px-4 rounded-lg my-2">
-                    <TextInput
-                      type="text"
-                      styles="w-full"
-                      placeholder="Tiêu đề bài viết...."
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                    />
-
                     <ReactQuill
                       ref={quillRef}
                       value={content}
                       onChange={setContent}
-                      formats={CustomCreatePost.formats}
-                      modules={CustomCreatePost.modules}
+                      formats={EditPostModal.formats}
+                      modules={EditPostModal.modules}
                       placeholder="Nội dung bài viết..."
                     />
 
@@ -216,19 +168,6 @@ const EditPostModal = ({
                         />
                         <i className="fa-solid fa-image"></i>
                         <span>Thêm ảnh</span>
-                      </label>
-
-                      {/* Thêm files */}
-                      <label className="flex items-center gap-1 text-base text-ascent-2 hover:text-ascent-1 cursor-pointer">
-                        <input
-                          type="file"
-                          onChange={handleFileUpload}
-                          className="hidden"
-                          accept=".pdf, .doc, .docx"
-                          multiple
-                        />
-                        <i className="fa-solid fa-upload"></i>
-                        <span>Thêm tệp</span>
                       </label>
                     </div>
 
@@ -258,35 +197,6 @@ const EditPostModal = ({
                           </div>
                         );
                       })}
-                    </div>
-
-                    {/* Hiển thị danh sách các tệpflex flex-wrap */}
-                    <div className="my-2 mt-5">
-                      {/* Hiển thị cả các tệp đã có và các tệp mới được thêm */}
-                      {files?.map((file, index) => (
-                        <>
-                          <div key={index} className="relative">
-                            <a
-                              href={
-                                file._id
-                                  ? `http://localhost:3001/${file.path}`
-                                  : URL.createObjectURL(file)
-                              }
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {file.name}
-                            </a>
-                            <button
-                              type="button"
-                              className="absolute top-0 right-0 px-2 bg-red-500 text-white rounded-full hover:bg-red-600 focus:outline-none"
-                              onClick={() => handleRemoveFile(index)}
-                            >
-                              <i className="fa-solid fa-x"></i>
-                            </button>
-                          </div>
-                        </>
-                      ))}
                     </div>
                   </div>
 
@@ -319,13 +229,13 @@ const EditPostModal = ({
   );
 };
 
-CustomCreatePost.modules = {
+EditPostModal.modules = {
   toolbar: [["bold", "italic", "underline"]],
   clipboard: {
     matchVisual: false,
   },
 };
 
-CustomCreatePost.formats = ["bold", "italic", "underline"];
+EditPostModal.formats = ["bold", "italic", "underline"];
 
 export default EditPostModal;

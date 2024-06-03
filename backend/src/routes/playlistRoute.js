@@ -13,6 +13,26 @@ router.get(
   playlistController.getPlaylistVideos
 );
 
+router.post(
+  "/addVideoToPlaylist",
+  checkJWT,
+  playlistController.addVideoToPlaylist
+);
+
+router.post(
+  "/deleteVideoFromPlaylist",
+  checkJWT,
+  playlistController.deleteVideoFromPlaylist
+);
+
+router.post(
+  "/createPlaylistAndAddVideo",
+  checkJWT,
+  playlistController.createPlaylistAndAddVideo
+);
+
+router.post("/deletePlaylist", checkJWT, playlistController.deletePlaylist);
+
 ///////////////////////// HỆ THỐNG /////////////////////////
 router.post(
   "/checkAndCreatePlaylist",
