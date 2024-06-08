@@ -6,6 +6,7 @@ import moment from "moment";
 import "moment/locale/vi";
 import numeral from "numeral";
 
+
 const HistoryVideoCard = ({ data }) => {
   moment.locale("vi");
   return (
@@ -42,7 +43,8 @@ const HistoryVideoCard = ({ data }) => {
               </span>
               <div className="flex text-sm font-semibold text-black/[0.7] truncate overflow-hidden">
                 <span>
-                  {numeral(data?.statistics?.viewCount).format("0,0")} lượt xem
+                {`${abbreviateNumber(data?.statistics?.viewCount, 2)} lượt xem `}
+                  {/* {numeral(data?.statistics?.viewCount).format("0,0")} lượt xem */}
                 </span>
                 <span className="flex text-[24px] leading-none font-bold text-black/[0.7] relative top-[-10px] mx-1">
                   .

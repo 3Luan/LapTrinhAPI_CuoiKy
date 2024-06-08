@@ -20,7 +20,7 @@ let getLikedVideos = async (req, res) => {
     const youtube = google.youtube({ version: "v3", auth });
 
     const response = await youtube.videos.list({
-      part: "snippet",
+      part: "snippet, statistics",
       myRating: "like",
       maxResults: 25,
     });

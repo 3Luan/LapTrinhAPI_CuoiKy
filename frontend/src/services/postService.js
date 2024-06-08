@@ -82,6 +82,10 @@ export const searchPostSavedAPI = (currentPage, keyword) => {
   return backendApi.get(`/api/post/searchPostSaved/${currentPage}/${keyword}`);
 };
 
+export const GetCountPosts = (userId) => {
+  return backendApi.get(`/api/post/GetCountPosts/${userId}`);
+}
+
 // admin
 export const getDeletePostsAPI = (currentPage) => {
   return backendApi.get(`/api/post/getDeletePosts/${currentPage}`);

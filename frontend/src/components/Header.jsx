@@ -5,7 +5,7 @@ import ytLogo from "../images/yt-logo.png";
 import ytLogoMobile from "../images/yt-logo-mobile.png";
 import { Popup } from "semantic-ui-react";
 import { SlMenu } from "react-icons/sl";
-import { IoIosSearch } from "react-icons/io";
+import { IoIosSearch, IoMdOpen } from "react-icons/io";
 import { RiVideoAddLine } from "react-icons/ri";
 import { FiBell } from "react-icons/fi";
 import { CgClose } from "react-icons/cg";
@@ -17,6 +17,8 @@ import { logoutAPI } from "../services/authService";
 import { getPlaylistIdAPI } from "../services/playlistService";
 import profileUser from "../images/profile-user.png";
 import logOut from "../images/logout.png";
+import listVideo from "../images/list.png"
+import LeftNav from "./LeftNav";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -26,7 +28,12 @@ const Header = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+  const [showLeftNav, setShowLeftNav] = useState(false);
 
+  const handleListVideoClick = () => {
+    // Đảo ngược trạng thái của showLeftNav
+    setShowLeftNav(!showLeftNav);
+  };
   const searchQueryHandler = (event) => {
     if (
       (event?.key === "Enter" || event === "searchButton") &&
@@ -74,6 +81,15 @@ const Header = () => {
             <SlMenu className="text-black text-xl" />
           )}
         </div>
+        {/* <button onClick={handleListVideoClick}>
+          <img 
+          className="h-6 mr-2"
+          src={listVideo}
+            alt="ListVideo"
+          />
+          {showLeftNav && <LeftNav/>}
+          
+        </button> */}
         {/* )} */}
         <Link to="/" className="flex h-5 items-center">
           <img

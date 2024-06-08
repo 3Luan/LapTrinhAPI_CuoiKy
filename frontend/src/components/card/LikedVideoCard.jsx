@@ -7,6 +7,7 @@ import "moment/locale/vi";
 
 const LikedVideoCard = ({ data }) => {
   moment.locale("vi");
+  console.log(data)
 
   return (
     <Link to={`/video/${data?.id}`}>
@@ -41,7 +42,7 @@ const LikedVideoCard = ({ data }) => {
                 )} */}
               </span>
               <div className="flex text-sm font-semibold text-black/[0.7] truncate overflow-hidden">
-                <span>110 views</span>
+                <span>{`${abbreviateNumber(data?.statistics?.viewCount, 2)} lượt xem `}</span>
                 <span className="flex text-[24px] leading-none font-bold text-black/[0.7] relative top-[-10px] mx-1">
                   .
                 </span>

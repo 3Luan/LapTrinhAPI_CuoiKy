@@ -82,9 +82,12 @@ const Trending = () => {
           {data.map((item) => (
             <TrendingVideoCard key={item.id.videoId} data={item} />
           ))}
+         
         </div>
       </div>
+      
     </div>
+     
   );
 };
 

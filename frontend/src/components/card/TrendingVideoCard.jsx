@@ -4,9 +4,12 @@ import { abbreviateNumber } from "js-abbreviation-number";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import moment from "moment";
 import "moment/locale/vi";
+import { getVideoByIdAPI } from "../../services/videoService";
 
 const TrendingVideoCard = ({ data }) => {
+
   moment.locale("vi");
+  console.log(data.snippet)
   return (
     <Link to={`/video/${data?.id}`}>
       <div className="flex flex-col md:flex-row mb-8 md:mb-3 lg:hover:bg-white/[0.1] rounded-xl md:p-4">
@@ -40,7 +43,7 @@ const TrendingVideoCard = ({ data }) => {
                 )} */}
               </span>
               <div className="flex text-sm font-semibold text-black/[0.7] truncate overflow-hidden">
-                <span>110 views</span>
+              {`${abbreviateNumber(data?.statistics?.viewCount, 2)} lượt xem `}
                 <span className="flex text-[24px] leading-none font-bold text-black/[0.7] relative top-[-10px] mx-1">
                   .
                 </span>

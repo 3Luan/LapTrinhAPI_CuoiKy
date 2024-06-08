@@ -5,12 +5,15 @@ import { Context } from "../context/contextApi";
 import { getLikedVideosAPI } from "../services/likeVideoService";
 import PostCard from "../components/card/PostCard";
 import { useDispatch, useSelector } from "react-redux";
-import { getPostsByUserIdAPI } from "../services/postService";
+import { getPostsByUserIdAPI, GetCountPosts} from "../services/postService";
 import { getAutoPlaylistAPI } from "../services/playlistService";
 import MixedPlaylistCard from "../components/card/MixedPlaylistCard";
 import { getVideoByIdAPI } from "../services/videoService";
 
+
 const Profile = () => {
+
+  const [totalPosts, setTotalPosts] = useState(0);
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const { changeLoading } = useContext(Context);
@@ -19,7 +22,22 @@ const Profile = () => {
 
   useEffect(() => {
     getData("posts");
+    fetchTotalPosts();
   }, []);
+
+  const fetchTotalPosts = async () => {
+    try {
+      const response = await getTotalPostsByUserAPI(auth?.id);
+      if (response.data.code === 0) {
+        setTotalPosts(response.data.totalPosts);
+      } else {
+        setTotalPosts(0);
+      }
+    } catch (error) {
+      console.error("Error fetching total posts:", error);
+      setTotalPosts(0);
+    }
+  };
 
   const getData = async (nameTab) => {
     setLoading(true);
@@ -79,40 +97,36 @@ const Profile = () => {
       <div className="grow w-[calc(100%-240px)] h-full overflow-y-auto bg-pink-50 custom-scrollbar">
         <section class="w-full overflow-hidden min-h-full">
           <div class="flex flex-col">
-            <img
-              src={
-                auth?.coverAvatar === ""
-                  ? "https://yt3.googleusercontent.com/KbPMUbosgKFr-A5ihp_5n39G-XJnOY3Un6CnAxfqLpWh6Lh0pm_1SXc-uwCAk2DgO1-PG8lO"
-                  : auth?.coverAvatar
-              }
-              alt="User Cover"
-              class="rounded-md w-full h-[12rem] xl:h-[12rem] lg:h-[10rem] md:h-[8rem] sm:h-[6rem] xs:h-[4rem] object-cover"
-            />
-
-            <div class="sm:w-[80%] xs:w-[90%] mx-auto flex">
+        
+            <div class="sm:w-[80%] xs:w-[90%] mx-30 flex">
               <img
                 src={auth?.avatar}
                 alt="User Profile"
-                class="rounded-full lg:w-[10rem] lg:h-[10rem] md:w-[8rem] md:h-[8rem] sm:w-[6rem] sm:h-[6rem] xs:w-[5rem] xs:h-[5rem]    relative lg:bottom-[5rem] sm:bottom-[4rem] xs:bottom-[3rem]"
+                class="rounded-full lg:w-[10rem] lg:h-[10rem] md:w-[8rem] md:h-[8rem] sm:w-[6rem] sm:h-[6rem] xs:w-[5rem] xs:h-[5rem] ml-48 mb-7 mt-10
+                   relative lg:bottom-[1rem] sm:bottom-[4rem] xs:bottom-[3rem]"
               />
 
-              <div class="w-full text-left sm:mx-4 xs:pl-4 text-gray-800 lg:text-4xl md:text-3xl sm:text-3xl xs:text-xl">
+              <div class="w-full text-left sm:mx-4 xs:pl-4 text-gray-800 lg:text-4xl md:text-3xl sm:text-3xl xs:text-xl mt-14">
                 <div className="font-bold">{auth?.name}</div>
                 <div className="text-gray-400 lg:text-lg md:text-md sm:text-sm xs:text-xs">
-                  {auth?.customUrl} ‧{" "}
+                  {auth?.customUrl} 
+                  <div className="text-gray-400 lg:text-lg md:text-sm sm:text-xs xs:text-xs">
+                  {totalPosts} bài viết ‧{" "}
                   {auth?.subscriberCount === "" ? 0 : auth?.subscriberCount}{" "}
                   người đăng ký
+                </div>
+                  
                 </div>
               </div>
             </div>
 
             <div class="xl:w-[80%] lg:w-[90%] md:w-[90%] sm:w-[92%] xs:w-[90%] mx-auto flex flex-col gap-4 items-center relative lg:-top-8 md:-top-6 sm:-top-4 xs:-top-4">
               <div class="w-full my-auto py-6 flex flex-col justify-center gap-2">
-                <div class=" xs:w-full xs:h-[10rem] flex text-black gap-3">
+                <div class=" xs:w-full xs:h-[10rem] flex text-black gap-3 ml-20">
                   <button
                     class={`${
-                      tab === "posts" ? "border-b-4" : ""
-                    } border-blue-600 lg:text-xl md:text-xl xs:text-lg`}
+                      tab === "posts" ? "border-b-2" : ""
+                    } border-black lg:text-lg md:text-xl xs:text-lg`}
                     onClick={() => {
                       onclickChangeTab("posts");
                     }}
@@ -122,8 +136,8 @@ const Profile = () => {
 
                   <button
                     class={`${
-                      tab === "autoPlaylist" ? "border-b-4" : ""
-                    } border-blue-600 lg:text-xl md:text-xl xs:text-lg`}
+                      tab === "autoPlaylist" ? "border-b-2" : ""
+                    } border-black lg:text-lg md:text-xl xs:text-lg`}
                     onClick={() => {
                       onclickChangeTab("autoPlaylist");
                     }}

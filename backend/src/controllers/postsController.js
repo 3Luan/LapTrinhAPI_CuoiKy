@@ -598,6 +598,45 @@ let unLikePost = async (req, res) => {
   }
 };
 
+
+// Tính tổng số bài viết người dùng đã đăng
+let countUserPosts = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      throw {
+        code: 1,
+        message: "Lỗi: ID người dùng không hợp lệ",
+      };
+    }
+
+    const count = await postsModel.countDocuments({
+      user: userId,
+      isDisplay: true,
+      isDelete: false,
+    });
+
+    res.status(200).json({
+      code: 0,
+      message: "Tính tổng số bài viết thành công",
+      data: { userId, count },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      code: error.code || 1,
+      message: error.message || "Lỗi: countUserPosts",
+    });
+  }
+};
+
+
+
+
+
+
+
 //////////////////////// Admin //////////////////////
 
 let getDeletePosts = async (req, res) => {
@@ -853,6 +892,7 @@ module.exports = {
   getPostsByUserId,
   likePost,
   unLikePost,
+  countUserPosts,
 
   /////////////admin///////////////
   getDeletePosts,

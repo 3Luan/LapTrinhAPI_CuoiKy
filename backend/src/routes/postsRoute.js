@@ -39,6 +39,8 @@ router.get(
 
 router.get("/getPostsById/:postId", checkJWT, postsController.getPostsById);
 
+router.get("/count/:userId",checkJWT, postsController.countUserPosts);
+
 // Admin
 router.get(
   "/getDeletePosts/:currentPage",

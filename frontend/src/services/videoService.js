@@ -4,7 +4,7 @@ import axios from "axios";
 export const popularVideosAPI = () => {
   return youtubeApi.get(`videos`, {
     params: {
-      part: "snippet",
+      part: "snippet,statistics",
       chart: "mostPopular",
       regionCode: "VN", // Video của quốc gia nào
       maxResults: 12, // Số lượng video bạn muốn hiển thị
@@ -57,7 +57,7 @@ export const getVideoCommentsByIdAPI = (videoId) => {
 export const getPopularMusicVideosAPI = () => {
   return youtubeApi.get(`videos`, {
     params: {
-      part: "snippet",
+      part: "snippet,statistics",
       chart: "mostPopular",
       regionCode: "VN",
       videoCategoryId: 10,
@@ -78,7 +78,7 @@ export const getVideoByIdAPI = (videoId) => {
 export const getPopularGameVideosAPI = () => {
   return youtubeApi.get(`videos`,{
     params:{
-      part: "snippet",
+      part: "snippet,statistics",
       chart: "mostPopular",
       regionCode:"VN",
       videoCategoryId: 20,
@@ -89,7 +89,7 @@ export const getPopularGameVideosAPI = () => {
 export const getPopularSportVideosAPI = () => {
   return youtubeApi.get(`videos`,{
     params:{
-      part: "snippet",
+      part: "snippet,statistics",
       chart: "mostPopular",
       regionCode:"VN",
       videoCategoryId: 17,
