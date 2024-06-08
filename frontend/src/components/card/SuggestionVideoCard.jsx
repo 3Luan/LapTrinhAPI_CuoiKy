@@ -5,7 +5,7 @@ import "moment/locale/vi";
 import toast from "react-hot-toast";
 import AddPlaylistModal from "../modals/AddPlaylistModal";
 
-const SuggestionVideoCard = ({ video }) => {
+const SuggestionVideoCard = ({ video, addVideo }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef();
   const [openModal, setOpenModal] = useState(false);
@@ -59,7 +59,6 @@ const SuggestionVideoCard = ({ video }) => {
             </span>
             <span className="truncate">
               {moment(video.snippet.publishedAt).fromNow()}
-              
             </span>
           </div>
         </Link>
@@ -83,6 +82,8 @@ const SuggestionVideoCard = ({ video }) => {
 
       {openModal && (
         <AddPlaylistModal
+          addVideo={addVideo}
+          video={video}
           videoId={video?.id?.videoId}
           openModal={openModal}
           setOpenModal={setOpenModal}

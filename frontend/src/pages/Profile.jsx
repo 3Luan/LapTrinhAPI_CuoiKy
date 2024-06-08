@@ -5,14 +5,12 @@ import { Context } from "../context/contextApi";
 import { getLikedVideosAPI } from "../services/likeVideoService";
 import PostCard from "../components/card/PostCard";
 import { useDispatch, useSelector } from "react-redux";
-import { getPostsByUserIdAPI, GetCountPosts} from "../services/postService";
+import { getPostsByUserIdAPI, GetCountPosts } from "../services/postService";
 import { getAutoPlaylistAPI } from "../services/playlistService";
 import MixedPlaylistCard from "../components/card/MixedPlaylistCard";
 import { getVideoByIdAPI } from "../services/videoService";
 
-
 const Profile = () => {
-
   const [totalPosts, setTotalPosts] = useState(0);
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
@@ -27,7 +25,7 @@ const Profile = () => {
 
   const fetchTotalPosts = async () => {
     try {
-      const response = await getTotalPostsByUserAPI(auth?.id);
+      const response = await GetCountPosts(auth?.id);
       if (response.data.code === 0) {
         setTotalPosts(response.data.totalPosts);
       } else {
@@ -97,7 +95,6 @@ const Profile = () => {
       <div className="grow w-[calc(100%-240px)] h-full overflow-y-auto bg-pink-50 custom-scrollbar">
         <section class="w-full overflow-hidden min-h-full">
           <div class="flex flex-col">
-        
             <div class="sm:w-[80%] xs:w-[90%] mx-30 flex">
               <img
                 src={auth?.avatar}
@@ -109,13 +106,12 @@ const Profile = () => {
               <div class="w-full text-left sm:mx-4 xs:pl-4 text-gray-800 lg:text-4xl md:text-3xl sm:text-3xl xs:text-xl mt-14">
                 <div className="font-bold">{auth?.name}</div>
                 <div className="text-gray-400 lg:text-lg md:text-md sm:text-sm xs:text-xs">
-                  {auth?.customUrl} 
+                  {auth?.customUrl}
                   <div className="text-gray-400 lg:text-lg md:text-sm sm:text-xs xs:text-xs">
-                  {totalPosts} bài viết ‧{" "}
-                  {auth?.subscriberCount === "" ? 0 : auth?.subscriberCount}{" "}
-                  người đăng ký
-                </div>
-                  
+                    {totalPosts} bài viết ‧{" "}
+                    {auth?.subscriberCount === "" ? 0 : auth?.subscriberCount}{" "}
+                    người đăng ký
+                  </div>
                 </div>
               </div>
             </div>

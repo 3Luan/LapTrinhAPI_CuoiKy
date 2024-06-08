@@ -5,7 +5,13 @@ import "moment/locale/vi";
 import { deleteVideoFromPlaylistAPI } from "../../services/playlistService";
 import toast from "react-hot-toast";
 
-const VideoPlaylistCard = ({ playlistId, videoId, video, isAutoPlaylist }) => {
+const VideoPlaylistCard = ({
+  playlistId,
+  videoId,
+  video,
+  isAutoPlaylist,
+  deleteVideoFromPlaylists,
+}) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef();
   const [isLoadingDelete, setIsLoadingDelete] = useState(false);
@@ -32,9 +38,11 @@ const VideoPlaylistCard = ({ playlistId, videoId, video, isAutoPlaylist }) => {
 
     try {
       const data = await deleteVideoFromPlaylistAPI(playlistId, videoId);
-      if (data?.code === 0)
+      if (data?.code === 0) {
         toast.success("Xóa video khỏi danh sách phát thành công");
-      else toast.error(data?.message);
+        deleteVideoFromPlaylists(videoId);
+        toggleMenu();
+      } else toast.error(data?.message);
     } catch (error) {
       console.log(error);
       toast.error("Lỗi khi xóa video khỏi danh sách phát");

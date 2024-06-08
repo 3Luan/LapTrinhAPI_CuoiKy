@@ -125,14 +125,14 @@ const AppRoutes = () => {
           {/* Admin Routes */}
           <Route path="/admin/login" element={<LoginAdmin />} />
 
-          <Route
+          {/* <Route
             path="/admin"
             element={
               <PrivateAdminRoutes>
-                <HomeAdmin />
+                <Account />
               </PrivateAdminRoutes>
             }
-          />
+          /> */}
 
           <Route
             path="/admin/quan-ly-tai-khoan"

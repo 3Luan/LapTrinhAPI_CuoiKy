@@ -8,8 +8,8 @@ const { google } = require("googleapis");
 const loginWithGoogle = (req, res, next) => {
   passport.authenticate("google", {
     scope: [
+      "https://www.googleapis.com/auth/youtube.force-ssl",
       "https://www.googleapis.com/auth/youtube",
-      // "https://www.googleapis.com/auth/drive",
       "profile",
       "email",
     ],

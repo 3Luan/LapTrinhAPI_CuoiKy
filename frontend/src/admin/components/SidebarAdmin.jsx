@@ -10,12 +10,12 @@ const SidebarAdmin = () => {
             <p className="text-lg font-medium text-ascent-1">Quản lý</p>
           </div>
         </div>
-        <Link
+        {/* <Link
           to="/admin"
           className="w-full flex items-center gap-4 py-2 cursor-pointer h-full"
         >
           <span>Thống kê</span>
-        </Link>
+        </Link> */}
         <Link
           to="/admin/quan-ly-tai-khoan"
           className="w-full flex items-center gap-4 py-2 cursor-pointer h-full"

@@ -10,7 +10,13 @@ import { RiPlayList2Fill } from "react-icons/ri";
 import { IoAdd } from "react-icons/io5";
 import toast from "react-hot-toast";
 
-const AddPlaylistModal = ({ openModal, setOpenModal, videoId }) => {
+const AddPlaylistModal = ({
+  openModal,
+  setOpenModal,
+  videoId,
+  addVideo,
+  video,
+}) => {
   const [playlists, setPlaylists] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingAdd, setIsLoadingAdd] = useState(false);
@@ -43,9 +49,10 @@ const AddPlaylistModal = ({ openModal, setOpenModal, videoId }) => {
     setIsLoadingAdd(true);
     try {
       const data = await addVideoToPlaylistAPI(playlistId, videoId);
-      if (data?.code === 0)
+      if (data?.code === 0) {
+        addVideo(video);
         toast.success("Thêm video vào danh sách phát thành công");
-      else toast.error(data?.message);
+      } else toast.error(data?.message);
     } catch (error) {
       console.log(error);
       toast.error("Lỗi khi thêm video vào danh sách phát");
