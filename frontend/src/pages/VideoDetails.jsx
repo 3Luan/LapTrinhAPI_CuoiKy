@@ -265,7 +265,7 @@ const VideoDetails = () => {
                       )}
                     </div>
                     <div className="text-black/[0.7] text-sm">
-                      <span>110 người đăng ký</span>
+                      {/* <span>110 người đăng ký</span> */}
                     </div>
                   </div>
                 </div>

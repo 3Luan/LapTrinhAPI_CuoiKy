@@ -7,9 +7,8 @@ import "moment/locale/vi";
 import { getVideoByIdAPI } from "../../services/videoService";
 
 const TrendingVideoCard = ({ data }) => {
-
   moment.locale("vi");
-  console.log(data.snippet)
+  console.log(data.snippet);
   return (
     <Link to={`/video/${data?.id}`}>
       <div className="flex flex-col md:flex-row mb-8 md:mb-3 lg:hover:bg-white/[0.1] rounded-xl md:p-4">
@@ -37,18 +36,21 @@ const TrendingVideoCard = ({ data }) => {
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-semibold mt-2 text-black/[0.7] flex items-center">
-                {data.snippet.channelTitle}
+                {data?.snippet?.channelTitle}
                 {/* {data?.author?.badges[0]?.type === "VERIFIED_CHANNEL" && (
                   <BsFillCheckCircleFill className="text-white/[0.5] text-[12px] lg:text-[10px] xl:text-[12px] ml-1" />
                 )} */}
               </span>
               <div className="flex text-sm font-semibold text-black/[0.7] truncate overflow-hidden">
-              {`${abbreviateNumber(data?.statistics?.viewCount, 2)} lượt xem `}
+                {`${abbreviateNumber(
+                  data?.statistics?.viewCount,
+                  2
+                )} lượt xem `}
                 <span className="flex text-[24px] leading-none font-bold text-black/[0.7] relative top-[-10px] mx-1">
                   .
                 </span>
                 <span className="truncate">
-                  {moment(data.snippet.publishedAt).fromNow()}
+                  {moment(data?.snippet?.publishedAt).fromNow()}
                 </span>
               </div>
             </div>

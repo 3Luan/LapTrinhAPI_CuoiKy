@@ -63,7 +63,7 @@ const VideoCard = ({ video }) => {
               {video?.snippet?.title}
             </span>
             <span className="text-[12px] font-semibold mt-2 text-black/[0.7] flex items-center">
-              {video.snippet.channelTitle}
+              {video?.snippet?.channelTitle}
             </span>
             <div className="flex text-[12px] font-semibold text-black/[0.7] truncate overflow-hidden">
               {/* <span>{`${abbreviateNumber(video?.stats?.views, 2)} views`}</span> */}
@@ -72,7 +72,7 @@ const VideoCard = ({ video }) => {
                 .
               </span>
               <span className="truncate">
-                {moment(video.snippet.publishedAt).fromNow()}
+                {moment(video?.snippet?.publishedAt).fromNow()}
               </span>
             </div>
           </div>
