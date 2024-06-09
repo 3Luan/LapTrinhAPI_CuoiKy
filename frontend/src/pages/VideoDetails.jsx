@@ -26,6 +26,7 @@ import {
   unlikeVideoAPI,
 } from "../services/likeVideoService";
 import { useSelector } from "react-redux";
+import { AiFillLike } from "react-icons/ai";
 
 const VideoDetails = () => {
   moment.locale("vi");
@@ -42,8 +43,6 @@ const VideoDetails = () => {
   const [openModal, setOpenModal] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const auth = useSelector((state) => state.auth);
-
-  console.log("comments", comments);
 
   useEffect(() => {
     fetchVideoDetails();
@@ -97,8 +96,6 @@ const VideoDetails = () => {
         await checkAndCreatePlaylistAPI(id, categoryId);
         const check = await checkLikeVideoAPI(id);
         if (check?.code === 0) setIsLiked(check?.data);
-
-        console.log("check", check);
       } catch (error) {
         console.log(error);
       }
@@ -278,7 +275,7 @@ const VideoDetails = () => {
                       className="flex items-center justify-center h-9 px-6 rounded-3xl bg-slate-600/[0.15] transition-colors duration-300 ease-in-out hover:bg-slate-600/[0.3] hover:text-white"
                       onClick={handleUnlikeVideo}
                     >
-                      <AiOutlineLike className="text-lg text-black mr-2" />
+                      <AiFillLike className="text-lg text-black mr-2" />
                       {`${abbreviateNumber(
                         video?.statistics?.likeCount,
                         2
@@ -340,28 +337,29 @@ const VideoDetails = () => {
                     <img
                       className="h-10 w-10 rounded-full object-cover mr-3"
                       src={
-                        comment.snippet.topLevelComment.snippet
-                          .authorProfileImageUrl
+                        comment?.snippet?.topLevelComment?.snippet
+                          ?.authorProfileImageUrl
                       }
                       alt={
-                        comment.snippet.topLevelComment.snippet
-                          .authorDisplayName
+                        comment?.snippet?.topLevelComment?.snippet
+                          ?.authorDisplayName
                       }
                     />
                     <div>
                       <div className="text-black font-semibold">
                         {
-                          comment.snippet.topLevelComment.snippet
-                            .authorDisplayName
+                          comment?.snippet?.topLevelComment?.snippet
+                            ?.authorDisplayName
                         }
                       </div>
                       <div className="text-gray-600">
                         {truncateDate(
-                          comment.snippet.topLevelComment.snippet.publishedAt
+                          comment?.snippet?.topLevelComment?.snippet
+                            ?.publishedAt
                         )}
                       </div>
                       <div className="text-black mt-2">
-                        {comment.snippet.topLevelComment.snippet.textOriginal.substring(
+                        {comment?.snippet?.topLevelComment?.snippet?.textOriginal.substring(
                           0,
                           100
                         )}

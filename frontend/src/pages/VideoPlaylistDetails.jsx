@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ReactPlayer from "react-player/youtube";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import { AiOutlineLike, AiOutlineSave } from "react-icons/ai";
@@ -21,6 +21,17 @@ import SuggestionVideoCard from "../components/card/SuggestionVideoCard";
 import { addHistoryAPI } from "../services/historyService";
 import moment from "moment";
 import "moment/locale/vi";
+import toast from "react-hot-toast";
+import {
+  addCommentAPI,
+  checkLikeVideoAPI,
+  deleteCommentAPI,
+  likeVideoAPI,
+  unlikeVideoAPI,
+} from "../services/likeVideoService";
+import { useSelector } from "react-redux";
+import { AiFillLike } from "react-icons/ai";
+import AddPlaylistModal from "../components/modals/AddPlaylistModal";
 
 const VideoPlaylistDetails = () => {
   moment.locale("vi");
@@ -34,9 +45,22 @@ const VideoPlaylistDetails = () => {
   const [isLoadingPlaylistVideos, setLoadingPlaylistVideos] = useState(false);
   const { changeLoading } = useContext(Context);
   const [categoryId, setCategoryId] = useState("");
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [saveId, setSaveId] = useState("");
+  const [newComment, setNewComment] = useState("");
+  const auth = useSelector((state) => state.auth);
+  const [isLiked, setIsLiked] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchVideoDetails();
+    if (playlistId === "c") {
+      setSaveId(autoPlaylistId);
+    } else {
+      setSaveId(playlistId);
+    }
   }, [videoId]);
 
   useEffect(() => {
@@ -60,6 +84,16 @@ const VideoPlaylistDetails = () => {
     document.getElementById("root").classList.remove("custom-h");
   }, []);
 
+  useEffect(() => {
+    const index = videoInPlaylist.findIndex(
+      (item) =>
+        item?.contentDetails?.videoId === videoId || item?.id === videoId
+    );
+    if (index !== -1) {
+      setCurrentVideoIndex(index);
+    }
+  }, [videoId]);
+
   const fetchComments = async () => {
     if (videoId !== "undefined") {
       try {
@@ -80,6 +114,7 @@ const VideoPlaylistDetails = () => {
     const date = moment(dateString);
     return date.fromNow(); // Trả về chuỗi như "2 năm trước", "3 tháng trước", v.v.
   };
+
   const fetchVideoDetails = async () => {
     setLoadingVideo(true);
     changeLoading(true);
@@ -109,6 +144,8 @@ const VideoPlaylistDetails = () => {
       try {
         await addHistoryAPI(videoId, categoryId);
         await checkAndCreatePlaylistAPI(videoId, categoryId);
+        const check = await checkLikeVideoAPI(videoId);
+        if (check?.code === 0) setIsLiked(check?.data);
       } catch (error) {
         console.log(error);
       }
@@ -198,6 +235,94 @@ const VideoPlaylistDetails = () => {
     });
   };
 
+  const handleVideoEnded = () => {
+    if (currentVideoIndex < videoInPlaylist.length - 1) {
+      const nextVideoId =
+        videoInPlaylist[currentVideoIndex + 1]?.contentDetails?.videoId ||
+        videoInPlaylist[currentVideoIndex + 1]?.id;
+
+      if (playlistId === "c") {
+        navigate(`/playlist/c/${saveId}/video/${nextVideoId}`);
+      } else {
+        navigate(`/playlist/${saveId}/c/video/${nextVideoId}`);
+      }
+    }
+  };
+
+  const handleLikeVideo = async () => {
+    try {
+      const response = await likeVideoAPI(video?.id);
+      if (response?.code === 0) {
+        setIsLiked(true);
+        toast.success("Thích video thành công");
+      } else {
+        toast.error(response?.message);
+      }
+    } catch (error) {
+      console.error("Lỗi khi thích video:", error);
+      toast.error("Lỗi khi thích video");
+    }
+  };
+
+  const handleUnlikeVideo = async () => {
+    try {
+      const response = await unlikeVideoAPI(video?.id);
+      if (response?.code === 0) {
+        setIsLiked(false);
+        toast.success("Bỏ thích video thành công");
+      } else {
+        toast.error(response?.message);
+      }
+    } catch (error) {
+      console.error("Lỗi khi bỏ thích video:", error);
+      toast.error("Lỗi khi bỏ thích video");
+    }
+  };
+
+  const handleCommentSubmit = async () => {
+    if (!newComment.trim()) {
+      toast.error("Vui lòng nhập bình luận.");
+      return;
+    }
+    try {
+      const response = await addCommentAPI(videoId, newComment); // Giả sử bạn có API để thêm bình luận
+      if (response?.code === 0) {
+        setComments((prevComments) => [response.data, ...prevComments]);
+        setNewComment("");
+        toast.success("Thêm bình luận thành công");
+      } else {
+        toast.error(response?.message);
+      }
+    } catch (error) {
+      console.error("Lỗi khi thêm bình luận:", error);
+      toast.error("Lỗi khi thêm bình luận");
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      // Gửi yêu cầu xóa bình luận đến máy chủ
+      const response = await deleteCommentAPI(commentId);
+      if (response?.code === 0) {
+        // Xóa bình luận thành công, cập nhật lại danh sách bình luận
+        const updatedComments = comments.filter(
+          (comment) => comment.id !== commentId
+        );
+        setComments(updatedComments);
+        toast.success("Xóa bình luận thành công");
+      } else {
+        toast.error(response?.message);
+      }
+    } catch (error) {
+      console.error("Lỗi khi xóa bình luận:", error);
+      toast.error("Lỗi khi xóa bình luận");
+    }
+  };
+
+  const handleSaveToPlaylist = () => {
+    setOpenModal(true);
+  };
+
   return (
     <div className="flex justify-center flex-row h-[calc(100%-56px)] bg-pink-50 overflow-y-auto">
       <div className="w-full max-w-[1280px] flex flex-col lg:flex-row">
@@ -212,6 +337,7 @@ const VideoPlaylistDetails = () => {
                   style={{ backgroundColor: "#000000" }}
                   playing={true}
                   aspectRatio="16:9"
+                  onEnded={handleVideoEnded}
                 />
               </div>
               <div className="mt-4 line-clamp-2 pb-8">
@@ -248,19 +374,38 @@ const VideoPlaylistDetails = () => {
                       )}
                     </div>
                     <div className="text-black/[0.7] text-sm">
-                      <span>110 người đăng ký</span>
+                      {/* <span>110 người đăng ký</span> */}
                     </div>
                   </div>
                 </div>
                 <div className="flex text-black mt-4 md:mt-0">
-                  <button className="flex items-center justify-center h-9 px-6 rounded-3xl bg-slate-600/[0.15] transition-colors duration-300 ease-in-out hover:bg-slate-600/[0.3] hover:text-white">
-                    <AiOutlineLike className="text-lg text-black mr-2" />
-                    {`${abbreviateNumber(
-                      video?.statistics?.likeCount,
-                      2
-                    )} Likes`}
-                  </button>
-                  <button className="flex items-center justify-center h-9 px-6 rounded-3xl bg-slate-600/[0.15] ml-2 transition-colors duration-300 ease-in-out hover:bg-slate-600/[0.3] hover:text-white">
+                  {isLiked ? (
+                    <button
+                      className="flex items-center justify-center h-9 px-6 rounded-3xl bg-slate-600/[0.15] transition-colors duration-300 ease-in-out hover:bg-slate-600/[0.3] hover:text-white"
+                      onClick={handleUnlikeVideo}
+                    >
+                      <AiFillLike className="text-lg text-black mr-2" />
+                      {`${abbreviateNumber(
+                        video?.statistics?.likeCount,
+                        2
+                      )} Likes`}
+                    </button>
+                  ) : (
+                    <button
+                      className="flex items-center justify-center h-9 px-6 rounded-3xl bg-slate-600/[0.15] transition-colors duration-300 ease-in-out hover:bg-slate-600/[0.3] hover:text-white"
+                      onClick={handleLikeVideo}
+                    >
+                      <AiOutlineLike className="text-lg text-black mr-2" />
+                      {`${abbreviateNumber(
+                        video?.statistics?.likeCount,
+                        2
+                      )} Likes`}
+                    </button>
+                  )}
+                  <button
+                    onClick={handleSaveToPlaylist}
+                    className="flex items-center justify-center h-9 px-6 rounded-3xl bg-slate-600/[0.15] ml-2 transition-colors duration-300 ease-in-out hover:bg-slate-600/[0.3] hover:text-white"
+                  >
                     <AiOutlineSave className="text-lg text-black mr-2" />
                     Lưu
                   </button>
@@ -285,8 +430,13 @@ const VideoPlaylistDetails = () => {
                 <textarea
                   className="w-full h-10 border-none px-4 py-2 mb-4 bg-pink-50"
                   placeholder="Viết bình luận ..."
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
                 ></textarea>
-                <button className="px-4 py-2 bg-blue-500 text-white rounded-md mb-4 ml-2 hover:bg-blue-600">
+                <button
+                  onClick={handleCommentSubmit}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-md mb-4 ml-2 hover:bg-blue-600"
+                >
                   Gửi
                 </button>
               </div>
@@ -298,36 +448,48 @@ const VideoPlaylistDetails = () => {
                     <img
                       className="h-10 w-10 rounded-full object-cover mr-3"
                       src={
-                        comment.snippet.topLevelComment.snippet
-                          .authorProfileImageUrl
+                        comment?.snippet?.topLevelComment?.snippet
+                          ?.authorProfileImageUrl
                       }
                       alt={
-                        comment.snippet.topLevelComment.snippet
-                          .authorDisplayName
+                        comment?.snippet?.topLevelComment?.snippet
+                          ?.authorDisplayName
                       }
                     />
                     <div>
                       <div className="text-black font-semibold">
                         {
-                          comment.snippet.topLevelComment.snippet
+                          comment?.snippet?.topLevelComment?.snippet
                             .authorDisplayName
                         }
                       </div>
                       <div className="text-gray-600">
                         {truncateDate(
-                          comment.snippet.topLevelComment.snippet.publishedAt
+                          comment?.snippet?.topLevelComment?.snippet
+                            ?.publishedAt
                         )}
                       </div>
                       <div className="text-black mt-2">
-                        {comment.snippet.topLevelComment.snippet.textOriginal.substring(
+                        {comment?.snippet?.topLevelComment?.snippet?.textOriginal.substring(
                           0,
                           100
                         )}
                         ...
                       </div>
                       <div className="text-blue-700 mt-1">
-                        <span>{comment.snippet.totalReplyCount} phản hồi</span>
+                        <span>
+                          {comment?.snippet?.totalReplyCount} phản hồi
+                        </span>
                       </div>
+                      {comment?.snippet?.topLevelComment?.snippet?.authorDisplayName?.toLowerCase() ===
+                        auth?.customUrl.toLowerCase() && (
+                        <button
+                          className="text-red-500 mt-2"
+                          onClick={() => handleDeleteComment(comment?.id)}
+                        >
+                          Xóa
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -361,6 +523,11 @@ const VideoPlaylistDetails = () => {
                       }
                       isAutoPlaylist={playlistId === "c" ? true : false}
                       deleteVideoFromPlaylists={deleteVideoFromPlaylists}
+                      isActive={
+                        playlistId === "c"
+                          ? item?.id === videoId
+                          : item?.contentDetails?.videoId === videoId
+                      } // Thêm thuộc tính isActive
                     />
                   ))}
                 </div>
@@ -384,6 +551,14 @@ const VideoPlaylistDetails = () => {
           </div>
         </div>
       </div>
+
+      {openModal && (
+        <AddPlaylistModal
+          videoId={video?.id}
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+        />
+      )}
     </div>
   );
 };

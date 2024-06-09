@@ -6,7 +6,6 @@ import moment from "moment";
 import "moment/locale/vi";
 import numeral from "numeral";
 
-
 const HistoryVideoCard = ({ data }) => {
   moment.locale("vi");
   return (
@@ -36,21 +35,24 @@ const HistoryVideoCard = ({ data }) => {
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-semibold mt-2 text-black/[0.7] flex items-center">
-                {data.snippet.channelTitle}
+                {data?.snippet?.channelTitle}
                 {/* {data?.author?.badges[0]?.type === "VERIFIED_CHANNEL" && (
                   <BsFillCheckCircleFill className="text-white/[0.5] text-[12px] lg:text-[10px] xl:text-[12px] ml-1" />
                 )} */}
               </span>
               <div className="flex text-sm font-semibold text-black/[0.7] truncate overflow-hidden">
                 <span>
-                {`${abbreviateNumber(data?.statistics?.viewCount, 2)} lượt xem `}
+                  {`${abbreviateNumber(
+                    data?.statistics?.viewCount,
+                    2
+                  )} lượt xem `}
                   {/* {numeral(data?.statistics?.viewCount).format("0,0")} lượt xem */}
                 </span>
                 <span className="flex text-[24px] leading-none font-bold text-black/[0.7] relative top-[-10px] mx-1">
                   .
                 </span>
                 <span className="truncate">
-                  {moment(data.snippet.publishedAt).fromNow()}
+                  {moment(data?.snippet?.publishedAt).fromNow()}
                 </span>
               </div>
             </div>

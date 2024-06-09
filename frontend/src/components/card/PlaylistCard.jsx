@@ -90,7 +90,7 @@ const PlaylistCard = ({ data, onDeleteSuccess }) => {
             </span>
             <div className="flex text-[16px] font-semibold text-black/[0.7] truncate overflow-hidden">
               <span className="truncate">
-                Cập nhật: {moment(data.snippet.publishedAt).fromNow()}
+                Cập nhật: {moment(data?.snippet?.publishedAt).fromNow()}
               </span>
             </div>
           </div>

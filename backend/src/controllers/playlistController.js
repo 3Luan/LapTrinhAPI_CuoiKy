@@ -2,6 +2,8 @@ const userModel = require("../models/UserModel");
 const playlistModel = require("../models/playlistModel");
 const historyModel = require("../models/historyModel");
 const { google } = require("googleapis");
+const youtube = google.youtube("v3");
+const axios = require("axios");
 
 ///////////////////////// YOUTUBE /////////////////////////
 
@@ -424,7 +426,55 @@ const deletePlaylist = async (req, res) => {
 
 ///////////////////////// HỆ THỐNG /////////////////////////
 
-let checkAndCreatePlaylist = async (req, res) => {
+const API_KEY = "AIzaSyBWqhobrT6nFXBQyYjuJcNg6IgsoCy0i48"; // Thay bằng API key của bạn
+const getVideoDetails = async (videoId) => {
+  try {
+    const response = await axios.get(
+      "https://www.googleapis.com/youtube/v3/videos",
+      {
+        params: {
+          part: "snippet",
+          id: videoId,
+          key: API_KEY,
+        },
+      }
+    );
+    return response.data.items[0].snippet;
+  } catch (error) {
+    console.error(
+      "Error fetching video details:",
+      error.response ? error.response.data : error.message
+    );
+    throw error;
+  }
+};
+
+const searchRelatedMusicVideos = async (query) => {
+  try {
+    const response = await axios.get(
+      "https://www.googleapis.com/youtube/v3/search",
+      {
+        params: {
+          part: "snippet",
+          q: query,
+          type: "video",
+          maxResults: 5,
+          videoCategoryId: 10,
+          key: API_KEY,
+        },
+      }
+    );
+    return response.data.items;
+  } catch (error) {
+    console.error(
+      "Error searching for related music videos:",
+      error.response ? error.response.data : error.message
+    );
+    throw error;
+  }
+};
+
+const checkAndCreatePlaylist = async (req, res) => {
   try {
     const { videoId, categoryId } = req.body;
     const userId = req.userId;
@@ -456,7 +506,7 @@ let checkAndCreatePlaylist = async (req, res) => {
     }
 
     const playlists = await playlistModel.aggregate([
-      { $match: { user: userId } }, // Lọc danh sách phát của người dùng
+      { $match: { user: userId } },
       {
         $addFields: {
           isVideoAtTop: {
@@ -468,15 +518,13 @@ let checkAndCreatePlaylist = async (req, res) => {
           },
         },
       },
-      { $match: { isVideoAtTop: true } }, // Lọc danh sách phát có videoId ở vị trí đầu tiên
+      { $match: { isVideoAtTop: true } },
     ]);
 
-    // Nếu có ít nhất một danh sách phát có videoId ở vị trí đầu tiên
     if (playlists.length > 0) {
-      // Cập nhật thời gian updateAt của playlist đầu tiên
       await playlistModel.updateOne(
-        { _id: playlists[0]._id }, // Điều kiện tìm kiếm: Tìm playlist dựa trên _id
-        { $set: { updatedAt: new Date() } } // Dữ liệu cập nhật: Cập nhật trường updatedAt thành thời gian hiện tại
+        { _id: playlists[0]._id },
+        { $set: { updatedAt: new Date() } }
       );
 
       return res.status(200).json({
@@ -498,12 +546,20 @@ let checkAndCreatePlaylist = async (req, res) => {
       return item.video._id;
     });
 
-    listVideoId = [videoId, ...listVideoId];
+    const videoDetails = await getVideoDetails(videoId);
+    const query = `${videoDetails.title}`;
+    const relatedVideos = await searchRelatedMusicVideos(query);
+
+    const relatedVideoIds = relatedVideos
+      .map((video) => video.id.videoId)
+      .filter((id) => id !== videoId);
+
+    listVideoId = [videoId, ...relatedVideoIds, ...listVideoId];
 
     const data = await playlistModel.create({
       user: userId,
       name: "Danh sách kết hợp",
-      videos: listVideoId.map((video) => video),
+      videos: listVideoId,
     });
 
     console.log("data", data);

@@ -87,7 +87,6 @@ const likeVideo = async (req, res) => {
 
     // Lấy danh sách các rating
     const ratings = response.data;
-    console.log("ratings", ratings);
 
     res.status(200).json({
       code: 0,
@@ -141,7 +140,6 @@ const unlikeVideo = async (req, res) => {
 
     // Lấy danh sách các rating
     const ratings = response.data;
-    console.log("ratings unile", ratings);
 
     res.status(200).json({
       code: 0,
@@ -192,7 +190,7 @@ const checkLikeVideo = async (req, res) => {
     let data;
 
     // Kiểm tra xem user đã like video hay chưa
-    if (ratings && ratings.rating === "like") {
+    if (ratings && ratings?.items[0].rating === "like") {
       data = true;
     } else {
       data = false;

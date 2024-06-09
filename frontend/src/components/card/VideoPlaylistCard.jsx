@@ -11,11 +11,13 @@ const VideoPlaylistCard = ({
   video,
   isAutoPlaylist,
   deleteVideoFromPlaylists,
+  isActive,
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef();
   const [isLoadingDelete, setIsLoadingDelete] = useState(false);
   const [isLoadingHidden, setIsLoadingHidden] = useState(false);
+  const cardRef = useRef(); // New ref for the card element
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -28,6 +30,12 @@ const VideoPlaylistCard = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (isActive && cardRef.current) {
+      cardRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [isActive]);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -52,23 +60,18 @@ const VideoPlaylistCard = ({
 
   const handleHiddenFromPlaylist = async () => {
     setIsLoadingHidden(true);
-
-    // try {
-    //   const data = await deleteVideoFromPlaylistAPI(playlistId, videoId);
-    //   if (data?.code === 0)
-    //     toast.success("Xóa video khỏi danh sách phát thành công");
-    //   else toast.error(data?.message);
-    // } catch (error) {
-    //   console.log(error);
-    //   toast.error("Lỗi khi xóa video khỏi danh sách phát");
-    // }
-
     setIsLoadingHidden(false);
   };
 
   moment.locale("vi");
   return (
-    <div className="relative flex mb-3">
+    <div
+      ref={cardRef} // Assign the ref to the card element
+      className={`items-center p-2 rounded-md cursor-pointer relative flex mb-3 ${
+        isActive ? "bg-gray-400" : "bg-white text-black"
+      }`}
+    >
+      {isActive && <i class="fa-solid fa-play"></i>}
       <Link
         to={
           isAutoPlaylist
@@ -95,7 +98,7 @@ const VideoPlaylistCard = ({
             {video?.snippet?.title}
           </span>
           <span className="text-[12px] lg:text-[10px] xl:text-[12px] font-semibold mt-2 text-black/[0.7] flex items-center">
-            {video.snippet.channelTitle}
+            {video?.snippet?.channelTitle}
           </span>
           <div className="flex text-[12px] lg:text-[10px] xl:text-[12px] font-semibold text-black/[0.7] truncate overflow-hidden">
             <span>110</span>
@@ -104,15 +107,17 @@ const VideoPlaylistCard = ({
             </span>
             <span className="truncate">
               {" "}
-              {moment(video.snippet.publishedAt).fromNow()}
+              {moment(video?.snippet?.publishedAt).fromNow()}
             </span>
           </div>
         </div>
       </Link>
+      {!isAutoPlaylist && (
+        <button className="absolute top-0 right-0" onClick={toggleMenu}>
+          <i className="fa-solid fa-ellipsis-vertical"></i>{" "}
+        </button>
+      )}
 
-      <button className="absolute top-0 right-0" onClick={toggleMenu}>
-        <i className="fa-solid fa-ellipsis-vertical"></i>{" "}
-      </button>
       {menuOpen && (
         <div
           ref={menuRef}

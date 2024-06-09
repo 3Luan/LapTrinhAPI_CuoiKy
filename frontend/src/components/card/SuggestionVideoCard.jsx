@@ -50,7 +50,7 @@ const SuggestionVideoCard = ({ video, addVideo }) => {
             {video?.snippet?.title}
           </span>
           <span className="text-[12px] lg:text-[10px] xl:text-[12px] font-semibold mt-2 text-black/[0.7] flex items-center">
-            {video.snippet.channelTitle}
+            {video?.snippet?.channelTitle}
           </span>
           <div className="flex text-[12px] lg:text-[10px] xl:text-[12px] font-semibold text-black/[0.7] truncate overflow-hidden">
             <span>110</span>
@@ -58,7 +58,7 @@ const SuggestionVideoCard = ({ video, addVideo }) => {
               .
             </span>
             <span className="truncate">
-              {moment(video.snippet.publishedAt).fromNow()}
+              {moment(video?.snippet?.publishedAt).fromNow()}
             </span>
           </div>
         </Link>

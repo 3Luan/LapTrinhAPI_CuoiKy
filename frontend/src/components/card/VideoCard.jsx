@@ -7,12 +7,14 @@ import "moment/locale/vi";
 import { usePopper } from "react-popper";
 import LargeImageModal from "../modals/LargeImageModal";
 import AddPlaylistModal from "../modals/AddPlaylistModal";
+import { useSelector } from "react-redux";
 
 const VideoCard = ({ video }) => {
   moment.locale("vi");
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef();
   const [openModal, setOpenModal] = useState(false);
+  const auth = useSelector((state) => state.auth);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -76,22 +78,24 @@ const VideoCard = ({ video }) => {
           </div>
         </Link>
         <div className="relative ml-auto">
-          <button onClick={toggleMenu} className="ml-3">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16m-7 6h7"
-              />
-            </svg>
-          </button>
+          {auth?.auth && (
+            <button onClick={toggleMenu} className="ml-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16m-7 6h7"
+                />
+              </svg>
+            </button>
+          )}
 
           {menuOpen && (
             <div

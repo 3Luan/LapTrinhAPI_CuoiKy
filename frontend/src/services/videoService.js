@@ -76,22 +76,22 @@ export const getVideoByIdAPI = (videoId) => {
 };
 
 export const getPopularGameVideosAPI = () => {
-  return youtubeApi.get(`videos`,{
-    params:{
+  return youtubeApi.get(`videos`, {
+    params: {
       part: "snippet,statistics",
       chart: "mostPopular",
-      regionCode:"VN",
+      regionCode: "VN",
       videoCategoryId: 20,
       maxResults: 12,
     },
   });
 };
 export const getPopularSportVideosAPI = () => {
-  return youtubeApi.get(`videos`,{
-    params:{
+  return youtubeApi.get(`videos`, {
+    params: {
       part: "snippet,statistics",
       chart: "mostPopular",
-      regionCode:"VN",
+      regionCode: "VN",
       videoCategoryId: 17,
       maxResults: 12,
     },

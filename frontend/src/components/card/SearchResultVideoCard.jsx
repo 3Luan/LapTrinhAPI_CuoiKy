@@ -64,7 +64,7 @@ const SearchResultVideoCard = ({ video }) => {
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-semibold mt-2 text-black/[0.7] flex items-center">
-                {video.snippet.channelTitle}
+                {video?.snippet?.channelTitle}
                 {/* {video?.author?.badges[0]?.type === "VERIFIED_CHANNEL" && (
                   <BsFillCheckCircleFill className="text-white/[0.5] text-[12px] lg:text-[10px] xl:text-[12px] ml-1" />
                 )} */}
@@ -77,7 +77,7 @@ const SearchResultVideoCard = ({ video }) => {
                   .
                 </span>
                 <span className="truncate">
-                  {moment(video.snippet.publishedAt).fromNow()}
+                  {moment(video?.snippet?.publishedAt).fromNow()}
                 </span>
               </div>
             </div>
