@@ -426,7 +426,7 @@ const deletePlaylist = async (req, res) => {
 
 ///////////////////////// HỆ THỐNG /////////////////////////
 
-const API_KEY = "AIzaSyBWqhobrT6nFXBQyYjuJcNg6IgsoCy0i48"; // Thay bằng API key của bạn
+const API_KEY = "AIzaSyC_1mkYjf6AOZRMqYYe_puF7pJEUqvO4vs"; // Thay bằng API key của bạn
 const getVideoDetails = async (videoId) => {
   try {
     const response = await axios.get(
@@ -519,6 +519,7 @@ const checkAndCreatePlaylist = async (req, res) => {
         },
       },
       { $match: { isVideoAtTop: true } },
+      { $sort: { updatedAt: -1 } }, // Sort by updatedAt in descending order
     ]);
 
     if (playlists.length > 0) {
@@ -555,6 +556,7 @@ const checkAndCreatePlaylist = async (req, res) => {
       .filter((id) => id !== videoId);
 
     listVideoId = [videoId, ...relatedVideoIds, ...listVideoId];
+    listVideoId = [...new Set(listVideoId)];
 
     const data = await playlistModel.create({
       user: userId,
@@ -595,6 +597,8 @@ let getAutoPlaylist = async (req, res) => {
     const playlistsWithFirstVideo = playlists.map((playlist) => ({
       playlistId: playlist._id,
       videoId: playlist.videos[0],
+      videoId: playlist.videos[0],
+      updatedAt: playlist.updatedAt,
     }));
 
     if (!playlistsWithFirstVideo.length) {

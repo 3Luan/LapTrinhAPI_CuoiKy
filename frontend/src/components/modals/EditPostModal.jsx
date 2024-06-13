@@ -26,8 +26,6 @@ const EditPostModal = ({
   const quillRef = useRef();
   const location = useLocation();
 
-  console.log("datadata", data);
-
   useEffect(() => {
     if (data) {
       setContent(data?.content);
@@ -59,7 +57,7 @@ const EditPostModal = ({
       setLoadUpdatePost(true);
 
       const formData = new FormData();
-      formData.append("postId", postId);
+      formData.append("postId", data?._id);
       formData.append("content", content);
 
       for (let i = 0; i < images.length; i++) {
@@ -74,18 +72,11 @@ const EditPostModal = ({
         loading: "Bài viết đang được sửa...",
         success: (data) => {
           if (data.code === 0) {
-            if (auth.isAdmin) {
-              if (
-                location.pathname === "/community" ||
-                location.pathname.startsWith("/profile")
-              ) {
-                deletePost(postId);
-                addPost(data);
-              }
-            } else {
-              deletePost(postId);
-            }
+            deletePost(data?.data?._id);
+            const newData = { ...data?.data, countLikes: 0 };
 
+            console.log("newData", newData);
+            addPost(newData);
             handleCloseModal();
             return data.message;
           } else {

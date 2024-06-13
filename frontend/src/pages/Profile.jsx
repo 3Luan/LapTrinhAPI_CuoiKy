@@ -108,8 +108,10 @@ const Profile = () => {
                 <div className="text-gray-400 lg:text-lg md:text-md sm:text-sm xs:text-xs">
                   {auth?.customUrl}
                   <div className="text-gray-400 lg:text-lg md:text-sm sm:text-xs xs:text-xs">
-                    {totalPosts} bài viết ‧{" "}
-                    {auth?.subscriberCount === "" ? 0 : auth?.subscriberCount}{" "}
+                    {/* {totalPosts} bài viết ‧{" "} */}
+                    {auth?.subscriberCount === ""
+                      ? 0
+                      : auth?.subscriberCount}{" "}
                     người đăng ký
                   </div>
                 </div>

@@ -11,7 +11,7 @@ import {
 import toast from "react-hot-toast";
 import EditPostModal from "../modals/EditPostModal";
 
-const PostCard = ({ data }) => {
+const PostCard = ({ data, deletePost, addPost }) => {
   moment.locale("vi");
   const [like, setLike] = useState(0);
   const [isLike, setIsLike] = useState();
@@ -91,15 +91,16 @@ const PostCard = ({ data }) => {
       setIsLoading(true);
       await toast.promise(deletePosttAPI(data._id), {
         loading: "Đang xóa...",
-        success: (data) => {
-          if (data.code === 0) {
-            // deletePost(data._id);
-            return data.message;
+        success: (data1) => {
+          if (data1.code === 0) {
+            deletePost(data._id);
+            return data1.message;
           } else {
-            throw new Error(data.message);
+            throw new Error(data1.message);
           }
         },
         error: (error) => {
+          console.log(error);
           return error.message;
         },
       });
@@ -224,8 +225,8 @@ const PostCard = ({ data }) => {
             openModal={openModalEditPost}
             setOpenModal={setOpenModalEditPost}
             // postId={post?._id}
-            // addPost={addPost}
-            // deletePost={deletePost}
+            addPost={addPost}
+            deletePost={deletePost}
             data={data}
           />
         )}

@@ -164,9 +164,10 @@ const updatePost = async (req, res) => {
     const { content, postId, imagesOld } = req.body;
     const images = req.files.images || [];
     const userId = req.userId;
-
+    console.log(postId);
     // Kiểm tra xem bài viết có tồn tại không
     const postOld = await postsModel.findById(postId);
+
     if (!postOld) {
       return res.status(404).json({
         code: 1,
@@ -221,7 +222,7 @@ const updatePost = async (req, res) => {
         );
 
         imagesToRemove.forEach(async (image) => {
-          await postModel.updateOne(
+          await postsModel.updateOne(
             { _id: postId },
             { $pull: { images: { _id: image._id } } }
           );
@@ -232,7 +233,7 @@ const updatePost = async (req, res) => {
         );
 
         imagesToRemove.forEach(async (image) => {
-          await postModel.updateOne(
+          await postsModel.updateOne(
             { _id: postId },
             { $pull: { images: { _id: image._id } } }
           );
@@ -258,10 +259,10 @@ const updatePost = async (req, res) => {
     await postsModel.updateOne({ _id: postId }, updateData);
 
     // Lấy bài viết đã cập nhật và trả về
-    const updatedPost = await postModel
+    const updatedPost = await postsModel
       .findById(postId)
-      .populate("user", "_id name pic")
-      .select("_id title createdAt updatedAt likes");
+      .populate("user", "_id name avatar");
+    // .select("_id title createdAt updatedAt likes");
 
     res.status(200).json({
       code: 0,
@@ -598,7 +599,6 @@ let unLikePost = async (req, res) => {
   }
 };
 
-
 // Tính tổng số bài viết người dùng đã đăng
 let countUserPosts = async (req, res) => {
   try {
@@ -630,12 +630,6 @@ let countUserPosts = async (req, res) => {
     });
   }
 };
-
-
-
-
-
-
 
 //////////////////////// Admin //////////////////////
 

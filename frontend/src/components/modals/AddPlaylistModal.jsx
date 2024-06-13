@@ -9,6 +9,7 @@ import Loading from "../../components/Loading";
 import { RiPlayList2Fill } from "react-icons/ri";
 import { IoAdd } from "react-icons/io5";
 import toast from "react-hot-toast";
+import { useLocation } from "react-router-dom";
 
 const AddPlaylistModal = ({
   openModal,
@@ -23,6 +24,7 @@ const AddPlaylistModal = ({
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
   const [newPlaylistTitle, setNewPlaylistTitle] = useState("");
   const auth = useSelector((state) => state.auth);
+  const location = useLocation();
 
   useEffect(() => {
     getData();
@@ -50,7 +52,7 @@ const AddPlaylistModal = ({
     try {
       const data = await addVideoToPlaylistAPI(playlistId, videoId);
       if (data?.code === 0) {
-        addVideo(video);
+        if (location.pathname.startsWith("/playlist")) addVideo(video);
         toast.success("Thêm video vào danh sách phát thành công");
       } else toast.error(data?.message);
     } catch (error) {

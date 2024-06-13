@@ -76,7 +76,7 @@ const PostDelete = ({}) => {
             <div className="flex items-center"></div>
 
             <div className="flex justify-start items-center">
-              <TextInput
+              {/* <TextInput
                 styles="-mt-2 rounded-md border border-gray-200 bg-gray-200 text-gray-600 transition duration-300 ease-in w-auto"
                 placeholder="Tìm kiếm..."
                 value={keywordSearch}
@@ -94,7 +94,7 @@ const PostDelete = ({}) => {
                 onClick={() => {
                   handleSearch(currentPage);
                 }}
-              />
+              /> */}
             </div>
           </div>
 

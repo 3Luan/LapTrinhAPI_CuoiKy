@@ -9,6 +9,7 @@ import PostCard from "../components/card/PostCard";
 import CreatePostModal from "../components/modals/CreatePostModal";
 import { getPostsAPI } from "../services/postService";
 import { useSelector } from "react-redux";
+import CustomPagination from "../components/CustomPagination";
 
 const Community = () => {
   const [data, setData] = useState([]);
@@ -16,29 +17,34 @@ const Community = () => {
   const { changeLoading } = useContext(Context);
   const [openModal, setOpenModal] = useState(false);
   const auth = useSelector((state) => state.auth);
+  const [currentPage, setCurrentPage] = useState();
+  const [count, setCount] = useState();
 
   useEffect(() => {
     document.getElementById("root").classList.add("custom-h");
   }, []);
 
   useEffect(() => {
-    getData();
+    getData(1);
   }, []);
 
-  const getData = async () => {
+  const getData = async (selectedPage) => {
     setLoading(true);
     changeLoading(true);
 
     try {
-      const data = await getPostsAPI(1);
+      const data = await getPostsAPI(selectedPage);
       if (data?.code === 0) {
         setData(data?.data);
+        setCount(data?.count);
       } else {
         setData([]);
+        setCount(0);
       }
     } catch (error) {
       console.log(error);
       setData([]);
+      setCount(0);
     }
 
     changeLoading(false);
@@ -55,6 +61,15 @@ const Community = () => {
 
   const addPost = (data) => {
     setData((posts) => [data, ...posts]);
+  };
+
+  const deletePost = (postId) => {
+    setData((posts) => posts.filter((post) => post._id !== postId));
+  };
+
+  const handlePageClick = (selectedPage) => {
+    setCurrentPage(selectedPage.selected);
+    getData(selectedPage.selected + 1);
   };
 
   return (
@@ -86,8 +101,20 @@ const Community = () => {
           </div>
 
           {data?.map((item) => {
-            return <PostCard data={item} />;
+            return (
+              <PostCard data={item} deletePost={deletePost} addPost={addPost} />
+            );
           })}
+
+          <div className="flex justify-center mb-10">
+            <CustomPagination
+              nextLabel=">"
+              onPageChange={handlePageClick}
+              pageCount={Math.ceil(count / 10)}
+              previousLabel="<"
+              currentPage={currentPage}
+            />
+          </div>
         </div>
       </div>
 
@@ -96,6 +123,7 @@ const Community = () => {
           openModal={openModal}
           setOpenModal={setOpenModal}
           addPost={addPost}
+          deletePost={deletePost}
         />
       )}
     </div>

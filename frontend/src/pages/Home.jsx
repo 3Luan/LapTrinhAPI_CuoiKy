@@ -31,21 +31,41 @@ const Home = () => {
 
       const playlistData = await getAutoPlaylistAPI();
       if (playlistData?.code === 0) {
+        // let videosInfo = await Promise.all(
+        //   playlistData?.data?.map((item) => getVideoByIdAPI(item?.videoId))
+        // );
+        // // // Tạo mảng mới chỉ chứa thông tin chi tiết của video
+        // const detailedData = videosInfo.map((info) => info.items[0]);
+
+        // const data = playlistData?.data.map((item, index) => ({
+        //   playlistId: item.playlistId,
+        //   video: detailedData[index],
+        // }));
+
+        // // Đảo ngược thứ tự của mảng data
+        // const reversedData = data.reverse();
+
+        // setVideoPlaylist(reversedData);
+
         let videosInfo = await Promise.all(
           playlistData?.data?.map((item) => getVideoByIdAPI(item?.videoId))
         );
-        // // Tạo mảng mới chỉ chứa thông tin chi tiết của video
+
+        // Tạo mảng mới chỉ chứa thông tin chi tiết của video
         const detailedData = videosInfo.map((info) => info.items[0]);
 
         const data = playlistData?.data.map((item, index) => ({
           playlistId: item.playlistId,
+          updatedAt: item.updatedAt,
           video: detailedData[index],
         }));
 
-        // Đảo ngược thứ tự của mảng data
-        const reversedData = data.reverse();
+        // Sắp xếp mảng data theo updatedAt
+        data.sort((a, b) => {
+          return new Date(b.updatedAt) - new Date(a.updatedAt);
+        });
 
-        setVideoPlaylist(reversedData);
+        setVideoPlaylist(data);
       } else {
         setVideoPlaylist([]);
       }
@@ -70,7 +90,7 @@ const Home = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-5">
           {!isLoading && (
             <>
-              {videoPlaylist.map((item) => {
+              {videoPlaylist.slice(0, 6).map((item) => {
                 // if (item.type !== "video") return false;
                 return <MixedPlaylistCard key={item?.id} data={item} />;
               })}

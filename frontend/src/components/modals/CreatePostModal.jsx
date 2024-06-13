@@ -50,7 +50,7 @@ const CreatePostModal = ({ openModal, setOpenModal, addPost }) => {
         success: (data) => {
           if (data.code === 0) {
             console.log("data", data);
-            const newData = { ...data.data, countLikes: 0 };
+            const newData = { ...data?.data, countLikes: 0 };
 
             addPost(newData);
             setContent("");
